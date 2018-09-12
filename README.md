@@ -4,10 +4,10 @@ Cours introductif (en français) présentant les fondations théoriques du Deep 
 
 L'objectif de cette introduction est de fournir un aperçu du Deep Learning à ceux qui souhaitent s'initier à l'utilisation de ce type de modèle ou approfondir leurs connaissances. 
 Une attention particulière a été apportée à la bibliographie pour permettre au lecteur d'approfondir ses connaissances à partir des articles de recherche associés.
-Le contenu est centré sur l'état de l'Art actuel (1er Semestre 2018) et permet d'avir un aperçu à jour du potentiel du Deep Learning.
+Le contenu est centré sur l'état de l'Art actuel (1er Semestre 2018) et permet d'avoir un aperçu à jour du potentiel du Deep Learning.
 
 Le choix a été fait de simplifier l'accès à ce cours en occultant la complexité mathématique non essentielle.
-De ce fait, il ne nécessite pas un niveau mathématique avancé (niveau Bac S / License) mais des bases rudimentaires sont indispensables en Statistiques, probabilités et en fondations mathématiques (Analyse et Algèbre).
+De ce fait, il ne nécessite pas un niveau mathématique avancé (niveau Bac S / License) mais des bases rudimentaires sont indispensables en Statistiques, Probabilités et en fondations mathématiques (Analyse et Algèbre).
 De même, une connaissance rudimentaire en apprentissage automatique est **fortement conseillée**.
 
 **ATTENTION**: Ce cours est en cours de réalisation et n'a pas encore subi de phase de relecture/correction. Des erreurs ou maladresses peuvent être présentes à cette étape de réalisation.
@@ -60,12 +60,12 @@ Le plan de ce cours est compose de (non exhaustif pour faciliter la lecture):
    - Détection d'objet
 
 10. Application au traitement du langage écrit
-   - Présentation théorique
-   - Classification de texte
+    - Présentation théorique
+    - Classification de texte
 
 11. Apprentissage par Renforcement et Deep Learning
-   - Généralité théorique
-   - Architecture existante
+    - Généralité théorique
+    - Architecture existante
 
 12. Proposition de lecture
 
@@ -78,26 +78,33 @@ Le plan de ce cours est compose de (non exhaustif pour faciliter la lecture):
 Le cours en **en cours de réalisation**. De nombreuses parties restent à ajouter/finaliser. Ci-dessous, les parties qui seront réalisées à court/moyen terme:
 
 1. Application à la reconnaissance vocale
+
 2. Application au NLP
    - Recherche d'information
    - Projection vectorielle
    - Desambiguïsation d'entités
    - Traduction automatique
+
 3. Applicaton à l'analyse d'image
    - Tracking
    - Segmentation
+
 4. Apprentissage par renforcement
    - A3C
    - Apprentissage et générateur non supervisé
+
 5. Ethique et Machine Learning
+
 6. Deep Learning bayésien
+
 7. Tutoriel applicatif pour Keras
+
 8. Architecture state-of-the-art 
    - Réseaux antagonistes génératifs
    - Attention (attention is all your need)
 
 Une ouverture est envisagée sur les méthodes "traditionnelles" de Machine Learning afin de proposer un aperçu complet du Machine Learning à l'heure actuelle.
-Il est **important** de savori que bien qu'efficace, le Deep Learning n'est pas "meilleur" que les autres approches mais constitue uen alternative puissante lorsque les conditions d'utilisation sont présentes.
+Il est **important** de savoir que bien qu'efficace, le Deep Learning n'est pas "meilleur" que les autres approches mais constitue uen alternative puissante lorsque les conditions d'utilisation sont présentes.
 
 ### Avancement
 
