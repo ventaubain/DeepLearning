@@ -108,12 +108,15 @@ Il est **important** de savoir que bien qu'efficace, le Deep Learning n'est pas 
 
 ### Avancement
 
-L'avancée est estimée à environ **35%** (prévision subjective).
+L'avancée est estimée à environ **25%** (prévision subjective).
 
 - [x] Fondamentaux théoriques
 - [ ] Analyse d'image, texte, signal
 - [ ] Tutoriel applicatif
 - [ ] Relecture, correction d'erreurs
+
+### Suivi des mises à jour
+30/09/2018: Ajout d'une ouverture sur la théorie de l'induction + correction mineures
 
 ## Auteur
 
