@@ -92,6 +92,7 @@ Le cours en **en cours de réalisation**. De nombreuses parties restent à ajout
 4. Apprentissage par renforcement
    - A3C
    - Apprentissage et générateur non supervisé
+   - Inverse Reinforcement Learning
 
 5. Ethique et Machine Learning
 
@@ -103,12 +104,18 @@ Le cours en **en cours de réalisation**. De nombreuses parties restent à ajout
    - Réseaux antagonistes génératifs
    - Attention (attention is all your need)
 
+9. Les faiblesses du Deep Learning
+   - Adversarial Examples
+   - CoordConv
+
+10. Alternatives pour la Backpropagation
+
 Une ouverture est envisagée sur les méthodes "traditionnelles" de Machine Learning afin de proposer un aperçu complet du Machine Learning à l'heure actuelle.
 Il est **important** de savoir que bien qu'efficace, le Deep Learning n'est pas "meilleur" que les autres approches mais constitue uen alternative puissante lorsque les conditions d'utilisation sont présentes.
 
 ### Avancement
 
-L'avancée est estimée à environ **25%** (prévision subjective).
+L'avancée est estimée à environ **15%** (prévision subjective).
 
 - [x] Fondamentaux théoriques
 - [ ] Analyse d'image, texte, signal
