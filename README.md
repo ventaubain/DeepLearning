@@ -110,6 +110,10 @@ Le cours en **en cours de réalisation**. De nombreuses parties restent à ajout
 
 10. Alternatives pour la Backpropagation
 
+11. Finalisation
+   - Clean-up des images - Mise en page
+   - Normalisation du code Latex
+
 Une ouverture est envisagée sur les méthodes "traditionnelles" de Machine Learning afin de proposer un aperçu complet du Machine Learning à l'heure actuelle.
 Il est **important** de savoir que bien qu'efficace, le Deep Learning n'est pas "meilleur" que les autres approches mais constitue uen alternative puissante lorsque les conditions d'utilisation sont présentes.
 
