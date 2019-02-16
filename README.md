@@ -1,22 +1,27 @@
 # Introduction au Deep Learning
 
+**ATTENTION**: Ce cours est en cours de réalisation. Des sections sont donc encore vides ou incomplètes ! De même, elle n'a pas encore subi de phase de relecture/correction. Des erreurs ou maladresses peuvent être présentes à cette étape de réalisation.
+N'hésitez pas à signaler toute erreur !
+
 Cours introductif (en français) présentant les fondations théoriques du Deep Learning et ses possibles applications.
 
 L'objectif de cette introduction est de fournir un aperçu du Deep Learning à ceux qui souhaitent s'initier à l'utilisation de ce type de modèle ou approfondir leurs connaissances. 
 Une attention particulière a été apportée à la bibliographie pour permettre au lecteur d'approfondir ses connaissances à partir des articles de recherche associés.
-Le contenu est centré sur l'état de l'Art actuel (1er Semestre 2018) et permet d'avoir un aperçu à jour du potentiel du Deep Learning.
+Le contenu est centré sur l'état de l'Art actuel (à partir du 1er Semestre 2018) et permet d'avoir un aperçu à jour du potentiel du Deep Learning.
 
-Le choix a été fait de simplifier l'accès à ce cours en occultant la complexité mathématique non essentielle.
+Le choix a été fait de simplifier l'accès à ce cours en occultant la complexité mathématique non essentielle. Elle est néanmoins présente dans le cadre de différentes sections théoriques.
 De ce fait, il ne nécessite pas un niveau mathématique avancé (niveau Bac S / License) mais des bases rudimentaires sont indispensables en Statistiques, Probabilités et en fondations mathématiques (Analyse et Algèbre).
 De même, une connaissance rudimentaire en apprentissage automatique est **fortement conseillée**.
 
-**ATTENTION**: Ce cours est en cours de réalisation et n'a pas encore subi de phase de relecture/correction. Des erreurs ou maladresses peuvent être présentes à cette étape de réalisation.
-N'hésitez pas à signaler toute erreur !
 ## Plan du cours
 
 Le plan de ce cours est compose de (non exhaustif pour faciliter la lecture):
 
-1. Fondamentaux
+1. Théorie de l'apprentissage
+   - Type d'apprentissage
+   - PAC Learning
+
+2. Fondamentaux
    - Un neurone: définition et apprentissage
    - Spécificités de l'apprentissage et Rétropropagation du gradient
    - Perceptron multicouche
@@ -69,13 +74,11 @@ Le plan de ce cours est compose de (non exhaustif pour faciliter la lecture):
 
 12. Proposition de lecture
 
-13. Initiation à Tensorflow
-
 14. Bibliographie
 
 ### A venir
 
-Le cours en **en cours de réalisation**. De nombreuses parties restent à ajouter/finaliser. Ci-dessous, les parties qui seront réalisées à court/moyen terme:
+Le cours en **en cours de réalisation**. De nombreuses parties restent à ajouter/finaliser. Ci-dessous, les parties qui seront réalisées à court/moyen terme (ordre arbitraire):
 
 1. Application à la reconnaissance vocale
 
@@ -91,43 +94,63 @@ Le cours en **en cours de réalisation**. De nombreuses parties restent à ajout
 
 4. Apprentissage par renforcement
    - A3C
-   - Apprentissage et générateur non supervisé
+   - Neural Architecture Search (NAS)
    - Inverse Reinforcement Learning
 
 5. Ethique et Machine Learning
 
 6. Deep Learning bayésien
 
-7. Tutoriel applicatif pour Keras
+7. Transfer Learning
+   - Domain Adaptation
+   - Few/One Shot Learning
 
 8. Architecture state-of-the-art 
    - Réseaux antagonistes génératifs
-   - Attention (attention is all your need)
+   - Machine de Turing neuronale
+   - Attention - Transformer
 
 9. Les faiblesses du Deep Learning
    - Adversarial Examples
    - CoordConv
 
 10. Alternatives pour la Backpropagation
+   - Neuroevolution
 
-11. Finalisation
+11. Geometric Deep Learning
+   - Maninfold
+   - Analyse de structures complexes (graphes)
+
+12. Tutoriel Applicatif
+   - PyTorch, Keras, Tensorflow
+   - Exemple d'application et application métier
+
+13. Finalisation
    - Clean-up des images - Mise en page
-   - Normalisation du code Latex
-
-Une ouverture est envisagée sur les méthodes "traditionnelles" de Machine Learning afin de proposer un aperçu complet du Machine Learning à l'heure actuelle.
-Il est **important** de savoir que bien qu'efficace, le Deep Learning n'est pas "meilleur" que les autres approches mais constitue uen alternative puissante lorsque les conditions d'utilisation sont présentes.
 
 ### Avancement
 
 L'avancée est estimée à environ **15%** (prévision subjective).
 
-- [x] Fondamentaux théoriques
+- [ ] Fondamentaux théoriques
 - [ ] Analyse d'image, texte, signal
 - [ ] Tutoriel applicatif
 - [ ] Relecture, correction d'erreurs
 
 ### Suivi des mises à jour
-30/09/2018: Ajout d'une ouverture sur la théorie de l'induction + correction mineures
+15/02/2019: Ajout de:
+   * Veille de l'état de l'Art :ballot_box_with_check:
+   * Mise à jour des optimizers (avec approfondissement théorique) (:x: Partiel)
+   * Mise à jour de PReLU :ballot_box_with_check:
+   * Descente du gradient :ballot_box_with_check:
+   * Théorie de l'apprentissage et apprentissage PAC :ballot_box_with_check:
+   * Théorie de la régularisation :ballot_box_with_check:
+   * Recurrent Neural Network (:x: Partiel)
+   * Restructuration du code Latex :ballot_box_with_check:
+   * Correctifs mineurs :ballot_box_with_check:
+   * **Suppression** du tutoriel applicatif + Retropropagation (:heavy_exclamation_mark: Réecriture)
+
+30/09/2018: Ajout d'une ouverture sur la théorie de l'induction + correctifs mineures
 
 ## Auteur
 
