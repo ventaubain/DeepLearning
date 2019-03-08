@@ -1,0 +1,1057 @@
+\section{Les Fondamentaux}
+
+
+\subsection{Deep Learning, le fer de lance du Machine Learning}
+Le deep Learning est une catégorie d'algorithmes basée sur un assemblage spécifique d'entités nommées \textbf{neurones}\footnote{Une analogie peut être réalisée avec le cerveau humain}. Ces entités sont assemblées sous forme de couches plus ou moins nombreuses et profondes, à l'architecture variable selon la complexité du modèle recherché et du problème à résoudre.\\
+
+\noindent Le Deep Learning modélise les données avec une haute capacité d'abstraction où chaque couche extrait et transforme les données issues de la couche précédente\footnote{Selon le type d'architecture, il peut y avoir des phénomènes de rétro-action} avec une approche majoritairement \textbf{non linéaire}. Un réseau possède donc un niveau d'abstraction dépendant de son architecture. Ainsi, les couches les plus basses discrimineront des phénomènes simples et généralistes\footnote{Non spécifiques au phénomène observé.} alors que les couches supérieures discrimineront des phénomènes plus complexes et caractéristiques du phénomène observé. La Figure \ref{absdl} illustre un exemple d'analyse d'une image. Nous pouvons observer que la première couche discrimine des structures géométriques simples telles que des lignes ou des courbes alors que les couches suivantes discriminent des structures plus complexes. Il n'y a pas de méthodologie reconnue pour déterminer l'architecture \textit{idéale} pour une problématique donnée. Seule l'approche empirique est employée à ce jour.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.45]{./tex/fondamentaux/dlabs.jpg}
+    \caption{Relation entre profondeur du réseau et capacité d'abstraction}
+    \label{absdl}
+\end{figure}
+
+\noindent Aujourd'hui, le Deep Learning est très populaire pour ses résultats qui sont, dans de nombreux domaines, les meilleurs de l'état de l'art. Néanmoins, sa grande qualité repose sur sa capacité à s'émanciper du travail de pré-traitement des données nécessaires aux méthodes plus classiques. Par exemple, une image, pour être exploitée par des modèles standards, doit être pré-traitée pour extraire son contenu utile. Ces méthodes d'extraction sont généralistes, lourdes à employer et pas toujours efficaces. Les modèles de Deep Learning (notamment convolutifs\footnote{Nous l'étudierons dans cette introduction}) ont la capacité d'apprendre dynamiquement l'extraction du contenu utile d'une image. Ainsi, le réseau se spécialise - sans intervention humaine - sur le type d'image qu'il traite et bien souvent, dépasse les performances de méthodes de pré-traitement standards. Cette capacité d'auto-apprentissage rend le Deep Learning modulable, simple\footnote{La simplicité est relative...} et facilement déployable. En effet, en simplifiant, il suffit de donner la donnée brute et le réseau s'adaptera seul. Cette capacité se généralise à différents types de données: signal 1D (texte, signal sonore), signal 2D (image), séries temporelles... Cependant, il est nécessaire d'adapter l'architecture du modèle au type de données et au problème ciblé.\\
+
+\noindent Cette souplesse d'utilisation a un coût non négligeable: \textbf{le volume de données}. Pour être fonctionnel, un réseau de Deep Learning doit exploiter un volume très important de données durant son apprentissage\footnote{Le volume dépend de la tâche à accomplir et de la nature des données}. Aujourd'hui, peu d'acteurs du milieu public ou privé ont un volume suffisant à disposition. Le Deep Learning ne constitue donc pas un remplaçant absolu aux approches de Machine Learning traditionnelles mais une alternative lorsque l'apprentissage peut être réalisé dans de bonnes conditions. De même, les architectures de Deep Learning sont exigeantes en temps machine et en ressources. Il est parfois pertinent d'exploiter des modèles plus légers et accessibles lorsque la tâches à accomplir ne nécessite pas un modèle à forte complexité.\\
+
+\noindent De ce fait, aujourd'hui, pour les tâches d'\textit{optimisation}, le Machine Learning traditionnel garde une place dominante alors que sur des thématiques complexes ou créatives (génération automatique, traduction...), le Deep Learning devient nécessaire.\\
+
+\noindent \textbf{Important}: Le Deep Learning profite d'une médiatisation importante qui tend à extrapoler ses qualités. Il est crucial de comprendre en profondeur les qualités et les défauts de ce type de modèle afin de ne pas alimenter les risques d'un développement non maîtrisé et biaisé.
+
+\subsection{Un neurone: le perceptron}
+Le modèle le plus simple correspond au modèle unitaire: un seul neurone. Ce modèle est appelé \textbf{perceptron} et a été inventé en 1957 par Frank Rosenblatt. La Figure \ref{perceptron} représente un neurone.\\
+
+\noindent Le perceptron (neurone) \textbf{selon Rosenblatt} est défini par différents éléments. Ainsi, un neurone j est décrit par:\\
+\begin{itemize}
+    \item Des données d'entrée: $x_1,x_2,...,x_n$
+    \item Des poids (qui pondèrent les données d'entrée): $\omega_1,...,\omega_n$
+    \item Un biais (qui régule l'activation du neurone): $b_j$
+    \item Une fonction d'activation (qui modélise la réponse du neurone en fonction des entrées pondérées): $\varphi()$ avec $\varphi= \left\{\begin{array}{ll}0 \ si \ x<0 \\1 \ si \ x> 0\end{array}\right.$ (fonction heavyside\footnote{Nous verrons par la suite que c'est un très mauvais choix de fonction !})
+    \item Une réponse (ou sortie): $y_j$
+\end{itemize}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{./tex/fondamentaux/perceptron.png}
+    \caption{La structure d'un neurone (perceptron)}
+    \label{perceptron}
+\end{figure}
+
+\noindent Le fonctionnement d'un neurone est simple. \\
+Supposons une entrée $[x_1,...,x_n]$ (de dimension n). Chaque entrée i est pondérée par un poids $\omega_i$ associé\footnote{il y a donc n poids}. Ainsi:
+$[x_1,...,x_n]\underset{\omega}{\longrightarrow}[x_1*w_1,..,x_n*w_n]$\\
+
+\noindent Une somme est réalisée de l'ensemble des données d'entrée pondérées et le biais $b_j$. On obtient donc: $transfer\_function=\sum_{i=1}^n (x_i*w_i)+b_j$\\
+Le biais est souvent représenté comme une valeur d'entrée constante (supposons 1 par exemple) et pondérée par un poids comme le serait une autre entrée. Ainsi, nous obtenons: $transfer\_function=\sum_{i=1}^n (x_i*w_i) + w_0=\sum_{i=0}^n (x_i*w_i)$ avec $x_0=1$\\
+
+\noindent La somme obtenue est transformée par une fonction d'activation $\varphi()$ et définira la sortie $y$ du neurone: $y=\varphi(transfer\_function)$
+
+\subsection{Le biais}
+Le biais est utilisé pour éviter que l'hyperplan réalisé par le neurone ait l'obligation de passer par l'origine. L'impact, la détermination et la représentation du biais sont encore un sujet d'étude et de recherche. Afin de ne pas complexifier cette introduction avec des approches mathématiques \textit{secondaires}, nous n'approfondirons pas cette problématique. Cependant, il est important d'avoir une sensibilité sur son utilité. Un exemple simple permet de la comprendre.\\
+
+\noindent Supposons une image complètement noire (pixels à 0) et une sortie souhaitée égale à $\lambda$. Cette problématique est insoluble car, avec les fonctions d'activation standards, la valeur de sortie par rapport à une stimulation nulle est invariable et correspond à la valeur de la fonction d'activation en 0. Supposons la fonction heavyside, la sortie serait donc de 0.5 et constante.\\
+
+\noindent Néanmoins, dans le cadre d'un réseau profond, le biais tend à voir son impact diminuer avec la complexité du modèle où le comportement d'activation est partiellement réalisé par des neurones de la couche précédente. Ainsi, dans le contexte du deep learning où les modèles se complexifient énormément, la gestion du biais peut être simplifiée voir "délaissée".\\
+
+\noindent Dans les réseaux profonds, le biais est aussi utilisé pour se protéger des défauts liées à l'initialisation des neurones, notamment le phénomène \textit{Dead ReLu}\footnote{Voir Section \ref{relu_danger}, partie fonction d'activation, ReLu}.
+
+\subsection{Le Perceptron Multicouche}
+
+Un neurone unique possède des qualités limitées\footnote{Par exemple, il ne peut traiter que des problèmes linéairement séparables} et ne peut résoudre que des problèmes simples\footnote{Ils sont souvent employés pour simuler des portes logiques par exemple}. Afin de résoudre des problèmes plus complexes, il est nécessaire d'en assembler plusieurs afin de créer une architecture plus performante. La première architecture que nous verrons est le modèle \textit{FeedForward}.\\
+
+\noindent Le modèle FeedForward est caractérisé par des couches de neurones où chaque neurone est connecté à l'intégralité des neurones de la couche suivante, permettant une \textit{propagation en avant} de l'information. Le réseau le plus populaire se reposant sur ce modèle est le Perceptron Multicouche. La Figure \ref{multicouche} en présente un exemple.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{./tex/fondamentaux/multicouche.png}
+    \caption{Modèle FeedForward: Le Perceptron multicouche}
+    \label{multicouche}
+\end{figure}
+
+\noindent Ainsi, les données d'entrées sont réparties sur la couche d'entrée composée de 1 ou plusieurs neurones où chaque donnée est envoyée à l'intégralité des neurones. Les sorties de ces neurones sont connectées à l'intégralité des neurones de la couche suivante, appelée couche cachée. Il peut y avoir plusieurs couches cachées. Les données d'entrées des couches cachées sont donc les sorties des neurones de la couche précédente. La couche de sortie correspond à la dernière couche du réseau et la sortie des neurones de cette couche correspond à la prédiction réalisée par le réseau. Ainsi, par exemple, dans un problème de classification à N classes\footnote{Voir Section \ref{multiclasslabel} pour plus de détails}, la couche de sortie sera composée de N neurones où les N sorties correspondent à la prédiction associée à chacune des classes (souvent sous forme probabiliste).\\
+
+\noindent Le nombre de neurones par couche et le nombre de couche nécessaire pour résoudre un problème ne peuvent être déterminés à l'avance. Il n'existe pas de méthode reconnue pour obtenir le réseau "idéal" pour résoudre un problème. Néanmoins, plus le nombre de neurones et/ou de couches est élevé, plus le modèle possède un haut pouvoir d'abstraction. Avoir une haute capacité d'abstraction est nécessaire sur des problématiques complexes mais augmenter la taille du réseau ne garantit pas un meilleur résultat sur l'ensemble des problèmes et présente des risques non négligeables que nous approfondirons dans la suite de cette introduction.\\
+
+\noindent En théorie, un perceptron multicouche à une couche cachée est capable d'approximer toute fonction d'un sous-ensemble compact de $R^n$ avec un nombre fini de neurones\footnote{Malheureusement, la méthode d'apprentissage à base de descente de gradient limite grandement les capacités d'apprentissage d'un réseau. Il n'existe pas d'alternative significativement meilleure actuellement.}. Il est donc considéré comme un \textbf{approximateur universel} de fonctions. Ce résultat est théorique et ne considère pas les difficultés d’apprentissage et de stabilité pour des problèmes complexes en très grande dimension caractéristique du Deep Learning.
+
+\subsection{L'apprentissage du neurone}
+
+\noindent Un neurone est défini par ses poids (et son biais). Lors de la création du neurone, les poids sont générés arbitrairement. Il est donc nécessaire de lui permettre \textit{d'apprendre}, i.e mettre à jour ses poids, afin qu'il puisse limiter ses erreurs de prédiction, i.e minimiser la valeur de la fonction de coût. Cet objectif est réalisé en deux étapes: l'étape \textit{Forward} et l'étape \textit{Backward}.\\
+
+\noindent L'étape \textit{Forward} consiste à déterminer une prédiction réalisée par le neurone et à calculer l'erreur (potentiellement cumulée) réalisée par rapport à une valeur de référence indiquée par les données d'apprentissage. L'étape \textit{Backward} réalise la mise à jour des poids du neurone en fonction de l'erreur réalisée  grâce à l'algorithme de \textbf{Rétropropagation du gradient}.
+
+\subsubsection{Etape Forward: Fonction de coût}
+\label{fn_cout}
+\noindent Afin de pouvoir mettre à jour les poids, il est nécessaire de savoir lorsque le neurone s'est trompé et quelle est l'ampleur de son erreur. La fonction de coût est utilisée pour quantifier cette erreur. Il existe différentes fonctions de coût selon la problématique à traiter. Les principales sont définies par:\\
+
+\noindent Soit $\hat{y}$, prédition du neurone, y, valeur de référence de la donnée d'apprentissage et n, nombre de prédictions faites:
+\begin{itemize}
+    \item Problème de \textbf{régression}:
+    \begin{itemize}
+        \item \textbf{Mean Squared Error}: $\boldsymbol{\mathcal{L}}=\frac{1}{n}\sum_{i=1}^{n}(y^{(i)}-\hat{y}^{(i)})^{2}=\frac{1}{n}\sum_{i=1}^{n}(\| \hat(y) - y \|_2)$\\
+
+        Cette fonction est la fonction la plus répandue et standard. Sa forme quadratique justifie qu'elle est convexe et ainsi, favorise l'apprentissage du réseau de neurone qui s'apparente à un problème d'optimisation. Cette fonction, du fait de la mise au carré, maximise l'importance des \textit{grandes erreurs}. C'est une spécificité importante à considérer car elle rendra l'apprentissage sensible aux valeurs extrêmes. De plus, cette fonction favorise une vitesse de convergence relativement lente du réseau de neurone.\\
+
+        \item \textbf{ Mean Squared Logarithmic Error}: $\boldsymbol{\mathcal{L}}=\frac{1}{n}\sum_{i=1}^{n}\big(\log(y^{(i)}+1)-\log(\hat{y}^{(i)}+1)\big)^{2}$\\
+
+        Cette fonction est une variante de Mean Squared Error à la différence qu'elle est moins sensible aux \textit{grandes erreurs} de prédiction. Dans le cas de données non normalisées aux échelles différentes, cette fonction limite la pénalisation des grands écarts de prédiction qui peuvent être liés, dans ce contexte, à l'échelle des données et non une véritable erreur de prédiction.\\
+
+        \item \textbf{Mean Absolute Error}: $\boldsymbol{\mathcal{L}} = \frac{1}{n}\sum_{i=1}^{n}(|  \hat(y)_i - y_i |) = \frac{1}{n}\sum_{i=1}^{n}(\| \hat(y) - y \|_1)$\\
+
+        Alors que \textit{Mean Squared Error} est empiriquement plus précise et performante dans le cadre d'une optimisation, \textit{Mean Absolute Error} produit des solutions plus \textit{éparses}\footnote{Isole les attributs fortement discriminants en minorant les attributs faiblement informatifs}, ce qui est utile dans le cadre d'extraction d'attribut pour les problèmes à haute dimension. De même, cette fonction de perte est plus résistante aux valeurs aberrantes (\textit{outliers}) et ignore les détails spécifiques, ce qui peut être utile pour lutter contre le sur-apprentissage. Néanmoins, cet aspect est responsable d'une perte d'informations, ce qui tend à la rendre empiriquement moins performante que son homologue basé sur la distance $L_2$ bien que plus stable. \\
+
+        Dans les faits, cette fonction n'est pas dérivable en 0, ce qui est problématique dans le cadre de la rétropropagation du gradient\footnote{Cet aspect sera détaillé par la suite.}. Pour corriger ce défaut, une variante a été proposé nommée \textit{Smooth $L_1$}:
+        $$| d |_{\text{smooth}} =   \begin{cases}
+          0.5 d^2, & \text{if}\ | d  | \leq 1 \\
+          | d | - 0.5, & \text{otherwise}
+        \end{cases}$$
+    \end{itemize}
+    \item Problème de \textbf{classification}:
+    \begin{itemize}
+        \item \textbf{Cross Entropy}: $\boldsymbol{\mathcal{L}}=-\frac{1}{n}\sum_{i=1}^{n}\big[y^{(i)}\log(\hat{y}^{(i)})+(1-y^{(i)})\log(1-\hat{y}^{(i)})\big]$\\
+
+        Cette fonction est la fonction standard dans le cadre de la classification binaire. Contrairement aux fonctions quadratiques, elle possède une vitesse de convergence plus rapide et tend à favoriser la convergence vers le minimum global (mais rien ne garantit cela !)\\
+
+        \item \textbf{Negative Logarithmic Likelihood}: $\boldsymbol{\mathcal{L}}=-\frac{1}{n}\sum_{i=1}^{n}\log(\hat{y}^{(i)})$\\
+
+        Cette fonction de coût est employée dans le cadre de problème de classification multi-classe. Elle peut être considérée comme une généralisation de la Cross Entropy.
+
+    \end{itemize}
+\end{itemize}
+
+\noindent Il existe de nombreuses autres fonctions de coût aux spécificités particulières. Le choix de la fonction de coût demande de l'intuition et une certaine sensibilité mathématique. Cependant, son choix est crucial pour un fonctionnement optimal du réseau de neurones. Le travail d'analyse des différentes fonctions est un étape indispensable pour l'étude de problèmes complexes.\\
+
+\subsubsection{Etape Backward: Rétropropagation du gradient}
+\label{backward}
+
+La fonction de coût détermine l'erreur du neurone durant son apprentissage. L'étape suivante est de permettre au neurone d'apprendre, d'évoluer en fonction de l'erreur réalisée et de faire varier chaque poids selon son impact dans l'erreur produite. Pour cela, la \textit{descente de gradient}\footnote{Il s'agit d'une méthode d'optimisation simple mais efficace. Il est possible d'en exploiter d'autres mais à ce jour, cette approche fait consensus dans la communauté scientifique.} est utilisée \textit{localement} et son application récursive sur les différents neurones du réseau forme l'algorithme de \textbf{Rétropropagation du gradient}. \\
+
+\noindent La descente du gradient est un algorithme d'optimisation exploitée dans le cadre de la minimisation (ou de la maximisation) d'une fonction objectif f(x) paramétrée par x. Dans le cadre du \textit{Machine Learning}, nous chercherons à minimiser la fonction objectif, i.e diminuer l'erreur d'apprentissage. La fonction objectif est de dimension $R^d$ où d, nombre de paramètres du modèle.\\
+
+\paragraph{Les méthodes de descente}
+La méthode de \textit{Descente du gradient} est une méthode de descente. Avant d'expliquer les spécificités de la descente du gradient, il est nécessaire d'expliciter la notion de méthode de descente.\\
+
+\noindent A partir d'un point $x_0$, une méthode de descente va générer une suite $(x_k)_{k \in \mathbb{N}}$ telle que:
+$$x_{k+1}=x_k+\alpha_kd_k$$
+$$\forall k \in \mathbb{N}, f(x_{k+1})\leq f(x_k)$$
+
+\noindent Deux paramètres sont donc à déterminer: la direction de descente $d_k$ et la valeur du pas $\alpha_k$. La méthode de détermination de la direction de descente est utilisée pour nommer l'algorithme. La recherche de la valeur du pas est nommée \textit{recherche linéaire}.\\
+
+\noindent \textbf{Important}: Cette partie a pour vocation d'introduire le concept d'optimisation differentiable nécessaire pour comprendre l'algorithme de Rétropropagation du gradient. De ce fait, elle est très restreinte et incomplète pour une compréhension approfondie. La section \ref{optimizer} approfondit spécifiquement les spécificités de ces algorithmes dans le cadre du Deep Learning, notamment le \textbf{calcul du pas} et les particularités liées au jeu d'apprentissage.
+
+\paragraph{La direction de descente}
+Soit une fonction objectif $f \in \mathbb{R}^n$. Une direction de descente est définie par un vecteur $d \in \mathbb{R}^n$ si pour un point $x \in \mathbb{R}^n$, $t \rightarrow f(x+td)$ est décroissante pour $t=0$. En d'autres mots, s'il existe $\epsilon > 0$ tel que:
+\begin{equation}
+\forall t \in ]0,\epsilon], f(x+td)<f(x)
+\label{eq_direc_des}
+\end{equation}
+\noindent Dans le cadre classique des méthodes de descente, la fonction à minimiser est \textit{differentiable}\footnote{Dans les faits, nous souhaitons qu'elle soit une fois ou deux fois differentiable selon la méthode de descente choisie.}. De ce fait, nous pouvons dire que d est une direction de descente de f en $x \in \mathbb{R}$ ssi:
+$$f'(x;d) = f'(x).d = \langle \nabla f(x),d \rangle = \nabla f(x)^Td < 0$$
+\noindent Ceci garantie une décroissance de la fonction f selon la direction de d car:
+$$ \forall \beta < 1, \exists \epsilon > 0, \forall t \in [0,\epsilon], f(x+td)<f(x)+t\beta \nabla f(x)^Td<f(x)$$
+
+\paragraph{Algorithme des méthodes à direction de descente}
+L'objectif de cet algorithme est de déterminer $\underset{x \in \mathbb{R}^n}{min}f(x)$.\\
+
+\noindent Supposons $f:\mathbb{R}^n \rightarrow \mathbb{R}$ differentiable\footnote{De degrés nécessaire selon les méthodes internes choisies} et $|\epsilon| \in [0,\nu]$ avec $\nu$, petit. Au début de l'itération k, nous disposons de $x_k \in \mathbb{R}^n$. Ainsi:
+
+\begin{enumerate}
+    \item \textit{Critère d'arrêt}: si $\nabla f(x_k) \leq \epsilon$, arrêt de l'algorithme
+    \item Sélection d'une direction de descente $d_k \in \{ d \in \mathbb{R}^n : \langle \nabla f(x),d \rangle < 0\}$
+    \item \textit{Recherche linéaire}: calcul du pas $\alpha_k$ selon une approche spécifique
+    \item $x_{k+1}=x_k+\alpha_kd_k$
+\end{enumerate}
+
+\noindent Tant que le critère d'arrêt n'est pas atteint, l'algorithme continue à  itérer. Il s'agit donc d'une famille d'algorithme \textbf{itératif}.
+
+\paragraph{Détermination de la direction de descente}
+L'une des difficultés de cette classe d'algorithme d'optimisation est la détermination de la direction de descente. C'est un sujet de recherche toujours actif. Dans le cadre de cette section, nous nous limiterons à l'étude des méthodes de descente en optimisation différentiable sans contrainte.\\
+
+\noindent Aujourd'hui, deux stratégies sont exploitées:
+\begin{itemize}
+    \item \textbf{L'approche de Cauchy}: L'approche de Cauchy repose sur l'exploitation du gradient, i.e:
+    $$d_k=-\nabla f(x_k)$$
+
+    Elle est à l'origine des méthodes dites \textit{algorithmes du gradient} (ou de la plus profonde descente). Cette approche est la \textbf{référence} dans le cadre des algorithmes de Deep Learning car les algorithmes associés sont de faible complexité algorithmique et de ce fait, véloces. Néanmoins, ses performances théoriques sont limitées bien qu'empiriquement satisfaisantes. Pour pouvoir exploiter cette approche, la fonction à optimiser doit être \textbf{au moins} une fois différentiable.
+
+    Le pas optimal $t_k$ est défini par:
+    $$\nabla f(x_k+t_kd_k)=0$$
+
+    En d'autres mots, l'algorithme converge vers un \textit{point stationnaire}, plus spécifiquement un \textbf{minimum local}. Le fait qu'il soit local est une caractéristique très importante car à l'origine d'une faiblesse théorique de performances.
+
+    \item \textbf{Approche du gradient conjugué}:
+    L'algorithme du gradient conjugué est une variante des algorithmes du gradient. L'idée est de construire itérativement des directions $\underset{k \in [0,n]}{d_k}$ mutuellement \textit{conjuguées}. Ainsi, chaque direction $d_k$ est obtenue par combinaison linéaire du gradient en $x_k$ et de la direction précédente $d_{k-1}$, elle-même dépendante de $d_{k-2}$ etc... Ainsi, nous avons:
+    $$
+        d_k = \left\{
+            \begin{array}{ll}
+                -\nabla f(x_k) & \mbox{si } k=0 \\
+                -\nabla f(x_k) + \beta_kd_{k-1} & \mbox{si } k > 0
+            \end{array}
+        \right.
+    $$
+
+    Cette approche a inspiré les méthodes dites \textit{de moment} dans le cadre des optimizers\footnote{La tion d'optimizer sera détaillée en détail dans la suite de cette introduction} utilisés pour le Deep Learning.
+
+    \item \textbf{Stratégie de Newton}: L'approche de Newton repose sur l'exploitation du hessien, i.e $$d_k=-H[f](x_k)^{-1}\nabla f(x_k)=-\nabla^2f(x_k)^{-1}\nabla f(x_k)$$
+
+    Elle est à l'origine des méthodes dites \textit{algorithmes de Newton}. Comparée à l'approche par gradient, cette stratégie est bien plus performante et théoriquement robuste. Néanmoins, calculer le hessien, dans le cadre du Deep Learning, est techniquement irréalisable. En effet, l'algorithme est de complexité $O(n^3)$, ce qui le rend trop gourmand en capacités computationnelles\footnote{Cette méthode pose aussi problème au niveau du coût mémoire nécessaire à stocker le hession. La matrice hessienne est de dimension n*n pour une fonction à optimiser sur $\mathbb{R}^n$, ce qui peut être très lourd dans le cadre d'un modèle neuronal très profond avec des millions de paramètres.}. Du fait de l'utilisation du hessien, la fonction à optimiser doit être \textbf{au moins} deux fois différentiable et le hessien, inversible.
+
+    Bien que non fonctionnelle en l'état, cette approche a inspiré des alternatives dans le cadre du Deep Learning. C'est notamment le cas de l'optimizer \textit{Adadelta}.
+\end{itemize}
+
+\noindent Il existe de nombreuses autres stratégies. Nous ne les approfondirons pas car les méthodes du gradient sont les seules véritablement exploitées dans le cadre du Deep Learning\footnote{Bien que la recherche soit activée sur l'utilisation d'approches plus performantes.}.\\
+
+\noindent Le Figure \ref{graddes} illustre le comportement d'une optimisation par descente de gradient. La descente de gradient ne garantit pas de trouver le minimum \textbf{global} ! Cette particularité est très importante car cela signifie qu'un modèle neuronal ne converge pas vers un état idéal mais uniquement vers la meilleure tendance locale ! Deux modèles ayant appris sur des mêmes données peuvent donc être différents. Ceci est très problématique et responsable d'une faiblesse théorique de ce type de modèle et plus globalement, du Machine Learning actuel.
+
+\begin{figure}
+    \centering
+    \begin{tabular}{cc}
+        \includegraphics[scale=0.35]{./tex/fondamentaux/graddes.png} &  \includegraphics[scale=0.3]{./tex/fondamentaux/graddes2.png}
+    \end{tabular}
+    \caption{Illustration de la descente de gradient}
+    \label{graddes}
+\end{figure}
+
+\paragraph{Rétropropagation du gradient - A FAIRE}
+
+
+\paragraph{Fonction d'activation}
+
+\noindent Bien que le perceptron de Rosenblatt utilise la fonction Heavyside comme fonction d'activation, il est possible d'en utiliser d'autres. Comme pour le choix de la fonction de coût, le choix de la fonction d'activation est capitale dans le développement d'un réseau de neurones. Il n'y a pas de méthodes clairement définies dans le choix de cette fonction. Les méthodes sont exclusivement empiriques bien que certaines fonctions semblent "sortir du lot"\cite{loss_deep}. \\
+
+\noindent Pour être pleinement fonctionnelle, les fonctions d'activations doivent présenter des caractéristiques particulières dépendantes des spécificités de l'algorithme de \textit{Rétropropagation du gradient}:
+\begin{itemize}
+    \item \textbf{Être dérivable en tout point}: Le gradient étant dépendant de la dérivée de la fonction d'activation, une fonction non dérivable est difficilement utilisable.
+    \item \textbf{La dérivé doit être non nulle}: Si la dérivée de la fonction d'activation est nulle, le gradient sera nul. De ce fait, l'apprentissage est impossible. Ce problème justifie la non-efficacité de la fonction Heavyside du perceptron standard car il \textbf{ne peut pas apprendre} en faisant varier ses poids.
+    \item \textbf{Être non linéaire}: Cette condition n'est pas une nécessité absolue mais permet de considérer les problématiques non linéairement séparables.
+\end{itemize}
+\noindent Les principales fonctions d'activation actuelles sont:
+
+\begin{figure}
+    \begin{tabular}{ccc}
+         a) \includegraphics[scale=0.4]{./tex/fondamentaux/sigmoid.png} &
+         b) \includegraphics[scale=0.4]{./tex/fondamentaux/tanh.png} &
+         c) \includegraphics[scale=0.4]{./tex/fondamentaux/relu.png}  \\
+         d) \includegraphics[scale=0.4]{./tex/fondamentaux/sigmoidder.png} &
+         e) \includegraphics[scale=0.4]{./tex/fondamentaux/tanhder.png} &
+         f) \includegraphics[scale=0.4]{./tex/fondamentaux/reluder.png}
+    \end{tabular}
+\caption{Fonctions d'activation: a) Sigmoide, b) tanh, c) ReLu et leurs dérivées associées}
+\label{fig:my_label}
+\end{figure}
+
+\begin{itemize}
+    \item Fonction Sigmoide: $f(x)=\frac{1}{1+e^-x}$\\
+
+    La fonction sigmoide est une référence historique en tant que fonction d'activation et reste aujourd'hui, très utilisée. Elle est appréciée pour sa dérivée non constante, ce qui permet d'avoir un gradient variable selon la valeur et donc, une convergence plus performante. Néanmoins, le fait qu'elle soit positive la rend peu performante sur certains problèmes. De plus, cette fonction favorise le phénomène de \textit{vanishing gradient}\footnote{Cette notion sera étudiée par la suite}. Un effet de bord est aussi présent. En effet, au-delà de (-3,3), la valeur de la dérivée est très faible ce qui impliquera un gradient faible. Un gradient très faible limitera grandement les variations des poids et augmentera le temps d'apprentissage du neurone (voire le "freezera").\\
+
+    Cette fonction est souvent utilisée sur la couche de sortie pour représenter une prédiction sous forme de probabilité (car résultat entre 0 et 1). C'est la fonction de référence dans le cadre de la classification binaire probabiliste.\\
+
+    \textbf{Remarque}: Un perceptron avec la sigmoide comme fonction d'activation est identique à une régression logistique\footnote{Soyez fier de vous. Nous venons de réinventer la roue !}.
+
+    \item Fonction tanh: $f(x) =\frac{e^x-e^{-x}}{e^x+e^{-x}}$\\
+
+    La fonction tanh présente les mêmes caractéristiques que la fonction sigmoide. La différence se situe sur le fait qu'elle est symétrique en 0 et prend valeur dans (-1,1), ce qui lui permet de ne pas être limitée par une condition de valeur positive. De plus, on observe un pic plus prononcé sur sa dérivée, ce qui implique un gradient plus important. Ceci est une qualité et un défaut car selon le problème, ça peut accélérer la convergence ou, au contraire, l'empêcher de pleinement converger.
+
+    \item Fonction ReLu: $f(x)=\left\{\begin{array}{ll}0 \ si \ x<0 \\max(0,x) \ si \ x\geq 0\end{array}\right.$\\
+
+    La fonction ReLu est, aujourd'hui, la fonction d'activation la plus employée dans les réseaux de neurones au niveau des couches cachées\footnote{Cette fonction présente peu d'intérêt en couche de sortie du fait de son faible pouvoir explicatif}. Cette fonction présente des particularités très importantes dans le cadre des réseaux profonds. Nous l'étudierons en profondeur dans la suite de cette introduction.
+
+    \item Fonction Softmax: $\delta(z)_j=\frac{e^{z_j}}{\sum_{i=1}^{N}e^{z_i}}$ avec $z=(z_1,...,z_N)$ et $j \in [1,...,N]$ \\
+
+    La fonction Softmax est une version généralisée de la fonction Sigmoide. Elle est ainsi utilisée dans la couche de sortie pour des problèmes de classifications multi-classes (voir Section \ref{multiclasslabel}) avec représentation probabiliste. Elle est employée lorsque la couche de sortie possède différents neurones associés aux classes prédites afin d'extraire la classe dont la probabilité est la plus élevée.
+\end{itemize}
+
+\subsection{Descente du gradient et optimizeur}
+\label{optimizer}
+
+Dans la section \ref{backward}, nous avons observé que la correction appliquée sur les poids est dépendante de l'erreur totale du réseau. Il est important de définir comment cette erreur est calculée. Pour cela, il y a trois approches complémentaires: la détermination du nombres de données d'apprentissage analysées pour une même itération, la détermination du pas d'apprentissage optimal et la méthode de calcul du gradient.
+
+\subsubsection{Approche par Batch, Minibatch et Stochastique}
+Le calcul du gradient se présente sous trois formes distinctes dépendant du nombre de données d'apprentissage utilisées pour déterminer une valeur de gradient à rétro-propager.\\
+
+\paragraph{Approche par Batch}
+
+\noindent L'approche par batch correspond à la version originale du calcul du gradient. Cette approche utilise l'intégralité des données d'apprentissage avant de faire une rétro-propagation (une mise à jour des poids). Ainsi, l'erreur du réseau correspond à la moyenne de l'erreur réalisée par les prédictions de l'intégralité des données d'apprentissage.\\
+
+\noindent Supposons la métrique \textit{Mean Squared Error} et un jeu de données de m entités, nous obtenons donc:
+$$ \theta = \theta - \eta \cdot \nabla_\theta J(\theta)$$
+$$ J(\theta) = \frac{1}{m}\sum_{i=1}^m(\hat{y}_i-y_i)^2$$
+
+\noindent Cette approche tend à définir un gradient stable permettant de limiter les "convergences oscillantes" du réseau. Il permet donc, en théorie, de favoriser une convergence lissée. Néanmoins, elle tend à converger vers un minimum local moins performant du fait de la trop grande généralité du gradient\footnote{Rappelez-vous le compromis biais-variance. Trop de généralité nuit à la spécialisation du modèle !}. De plus, il est nécessaire de calculer l'intégralité des erreurs avant de réaliser une mise à jour. Bien que ces calculs puissent être parallélisés, les mises à jour des poids sont lentes et de ce fait, l'apprentissage du réseau aussi. Dans le cas de jeu de données massifs (plusieurs millions voir milliards de données), cette approche est inutilisable en temps humain.\\
+
+\paragraph{Approche Stochastique}
+
+\noindent L'approche stochastique calcule l'erreur avec une donnée d'apprentissage uniquement. Ainsi, il y a un apprentissage par rétropropagation à chaque prédiction réalisée durant l'apprentissage.\\
+
+\noindent Supposons la métrique \textit{Mean Squared Error}, nous obtenons donc:
+$$\theta = \theta - \eta \cdot \nabla_\theta J( \theta; x^{(i)}; y^{(i)})$$
+$$ J(\theta; x^{(i)}; y^{(i)}) = (\hat{y^{(i)}}-y^{(i)})^2$$
+
+\noindent Cette approche permet une évolution rapide du réseau du fait de la mise à jour récurrente des poids à chaque prédiction d'apprentissage. L'aspect stochastique favorise un gradient \textit{bruité} qui limite le risque de convergence précipitée vers un minimum local mais favorise aussi la convergence vers un minimum potentiellement moins performant. De plus, l'aspect bruité du gradient entraîne une forte variance dans la mise à jour des poids et de ce fait, tend à rendre l'évolution du réseau moins \textit{lissée}. Cette approche est très sensible aux données aberrantes et extrêmes. De même, il est préférable de sélectionner aléatoirement la donnée d'apprentissage afin d'éviter un biais associé à une répartition constante des données au fil des \textit{epochs}.\\
+
+\paragraph{Approche par MiniBatch}
+
+\noindent L'approche par MiniBatch est un compromis entre l'approche par Batch et Stochastique. Avec cette méthode, l'erreur est calculé à partir d'un sous-ensemble du jeu d'apprentissage. Cette méthode est la plus répandue aujourd'hui du fait de ses performances.\\
+
+\noindent Supposons la métrique \textit{Mean Squared Error}, un jeu de données de m entités et un minibatch de n entités. Nous obtenons donc:
+$$\theta = \theta - \eta \cdot \nabla_\theta J( \theta; x^{(i:i+n)}; y^{(i:i+n)})$$
+$$ J( \theta; x^{(i:i+n)}; y^{(i:i+n)}) = \frac{1}{n}\sum_{i=1}^n(\hat{y}_i-y_i)^2$$
+
+\noindent Cette méthode permet une plus grande robustesse et un meilleur contrôle de l'évolution du réseau que l'approche stochastique tout en conservant une mise à jour du réseau "régulière", ce qui permet une évolution du modèle plus rapide mais surtout, son exploitation. Le MiniBatch étant de taille restreinte, la problématique de convergence précipitée de l'approche par Batch est évitée. Cette méthode offre ainsi un bon compromis qui favorise les performances, de même que pour les facilités d'implémentation en limitant les problématiques de stockage des données d'apprentissage en mémoire. Néanmoins, le nombre d'entités dans le MiniBatch est un hyperparamètre important qui ne peut être défini qu'empiriquement. Par défaut, on a tendance à exploiter des minibatchs de 32 éléments ou plus afin d'avoir une significativité statistique. De même, il est préférable de sélectionner aléatoirement les données d'apprentissage afin d'éviter un biais associé à une répartition constante des données au fil des \textit{epochs}.
+
+\subsubsection{La problématique de la détermination du pas - A FAIRE}
+
+khjh
+
+\subsubsection{Aperçu des optimizer}
+
+Lors de la mise à jour des poids, le pas (facteur multiplicatif du gradient) a une grande importance. Une des grandes difficultés est de déterminer qu'elle est sa valeur optimale et ce, de manière statique ou dynamique. Dans la version initiale de l'algorithme du gradient, le pas est un hyperparamètre constant et fixé par l'utilisateur. Cette méthode s'avère difficile à optimiser et peu efficace expérimentalement.\\
+
+\noindent Pour corriger ce problème, des améliorations (appelées \textit{optimizer}) ont été proposées. Deux facteurs d'optimisation existent: la méthode de détermination du pas d'apprentissage et l'étude du \textit{moment} des gradients. Le moment représente "l'engouement" que l'on a dans la mise à jour du gradient proposé. Supposons une succession de gradients dans la même direction\footnote{Imaginez une balle qui glisse le long d'une pente. L'énergie emmagasinée par la balle augmente avec la pente et diminue avec une montée ou un sol plat. Le moment peut être associé à l'énergie cinétique de cette balle} et de grande intensité, nous pouvons donc supposer être sur une voie de convergence favorable. De ce fait, il faut favoriser la mise à jour associée. Au contraire, si la valeur s'amoindrit ou que la direction varie, il faut limiter l'engouement de la mise à jour afin de ne pas "se perdre" (divergence ou convergence interrompue à cause d'une valeur de pas qui la bloque) . Le moment permet ainsi de limiter les oscillations durant la convergence, d'avoir une mémoire sur son évolution et d'accélérer la convergence.\\
+
+\noindent parler de:
+\begin{itemize}
+    \item faire section: problematique du pas avec sgd
+    \item snapshot ensemble https://arxiv.org/pdf/1704.00109.pdf
+    \item second ordre, problème lgfgs http://cs231n.github.io/neural-networks-3/\#second
+\end{itemize}
+
+\paragraph{SGD Annealing}
+Par défaut, la descente du gradient exploite un pas fixe. L'invariabilité du pas est une problématique majeure. En effet, un pas important ne permet pas de converger au plus bas du minimum local considéré. Un pas important aura tendance à s'extraire du minimum local ou à limiter grandement la précision de l'optimisation en se limitant à osciller entre deux positions approximatives. Un pas plus faible permet une plus grande sensibilité de l'optimisation en limitant l'impact de la variation, ce qui permet une plus grande précision. \\
+
+\noindent Un pas important permet d'\textit{explorer} l'univers des hypothèses et permet une plus grande robustesse à la convergence vers le minimum local le plus proche. Au contraire, un pas faible permet une convergence plus précise mais est plus limité quant à sa capacité d'exploration. Intuitivement, nous pouvons considérer qu'un pas important est préférable au début d'un apprentissage afin que le réseau puisse explorer l'univers des hypothèses. Au contraire, plus le réseau apprend, plus il doit devenir précis et limiter l'exploration. Ainsi, le modèle doit optimiser la convergence vers le minimum local considéré. De ce fait, le pas doit être plus faible pour favoriser ce comportement.\\
+
+\noindent Cette intuition mène à une amélioration de la détermination du pas. Ce dernier ne doit pas être fixe mais \textit{diminuer au cours du temps} (annealing\cite{annealing}). Ainsi, périodiquement, le pas va diminuer afin de passer d'un comportement exploratoire à un comportement de convergence.\\
+
+\noindent La méthode de réduction périodique du pas est variable et présente une infinité de possibilités. Néanmoins, trois méthodes classiques sont répandues:
+\begin{itemize}
+    \item \textbf{Step decay}: Cette approche consiste à retirer une \textbf{valeur fixe} à la valeur du pas selon un critère de périodicité fixe ou une condition particulière. Le critère de périodicité de référence est le nombre d'épochs. Ainsi, par exemple, nous pouvons diminuer d'un quart la valeur du pas à chaque épochs (ou toutes les deux épochs etc...).\\
+
+    Il est aussi possible de se baser sur une condition particulière, notamment la diminution de l'erreur d'apprentissage. Par exemple, au lieu de se baser sur le nombre d'épochs, nous pouvons définir que le pas doit être diminué lorsque l'erreur d'apprentissage stagne (qu'on peut associer à un comportement oscillant de la convergence) ou encore, qu'elle augmente. \\
+
+    De même, il est possible de définir un critère sériel. Réduire le pas à chaque variation "néfaste" de l'erreur d'apprentissage possède les défauts d'un comportement stochastique, notamment la sur-exploitation des tendances locales qui peuvent nuire à la convergence. Appliquer la diminution du pas lorsqu'une augmentation de l'erreur d'apprentissage est présente $\beta$ fois permet de favoriser une bonne interprétation de la tendance globale. $\beta$ est un hyperparamètre qui peut être difficile à déterminer et relève essentiellement de l'instinct.
+
+    \item \textbf{Exponential decay}: La variation par \textit{Step} se comporte comme une variation \textit{par palier}. Il peut être préférable d'avoir une variation plus lissée mais surtout à l'amplitude variable. Ainsi, retirer une valeur fixe à un pas élevé est moins impactant que retirer cette même valeur à un pas plus faible. Ainsi, il peut être préférable de retirer une valeur dépendant de la valeur actuelle du pas.\\
+
+    Exponential decay se base sur un facteur de variation exponentiel. Ainsi, nous avons:
+    $$\alpha = \alpha_0 e^{-k t}$$
+    \noindent Avec $\alpha$, pas actuel, $\alpha_0$, pas initial et k, critère multiplicatif qui détermine l'impact de la varition. Il s'agit d'hyperparamètre à définir par l'utilisateur.
+
+    \item \textbf{1/t decay}: Cette approche suit la même logique que Exponential decay. Elle est définie par:
+    $$\alpha = \alpha_0 / (1 + k t )$$
+    \noindent Avec $\alpha$, pas actuel, $\alpha_0$, pas initial et k, critère multiplicatif qui détermine l'impact de la varition. Il s'agit d'hyperparamètre à définir par l'utilisateur.
+\end{itemize}
+
+\noindent Dans les faits, lorsque ce type de méthode pour la détermination du pas est employée, \textbf{Step decay} est préféré car plus facilement interprétable d'un point de vue métier et pour la supervision de l'apprentissage. De plus, bien que plus efficace qu'une approche SGD classique, ces méthodes tendent à devenir obsolètes face à d'autres techniques plus sophistiquées sauf dans des cas d'architectures particulières.
+
+\paragraph{Approche par cycle: Cyclical Learning Rate}
+\noindent Une des problématiques majeures de l'optimisation par descente de gradient est la convergence vers un \textbf{minimum local}. \textit{SGD annealing}, du fait de la réduction permanente du pas durant l'optimisation, a tendance à être très sensible à ce problème. De même, la fonction de perte d'un réseau de neurones possède de nombreuses dimensions, ce qui favorise l'existence de \textbf{point-selle}. La Figure \ref{point_selle_pic} illustre les spécificités de ce type de point. Ces points sont très nocifs à la qualité de la convergence et trompent l'algorithme du gradient. Pour favoriser la convergence vers le minimum global\footnote{Il n'y a aucune certitude d'y arriver !}, une amélioration de SGD appelée Cyclical LR\cite{cyclicallr} a été proposée.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.45]{./tex/fondamentaux/minmaxsaddle.png}
+    \caption{Différence entre minimum global, maximum global et point-selle}
+    \label{point_selle_pic}
+\end{figure}
+
+\noindent L'idée de Cyclical LR repose sur le fait d'augmenter périodiquement la valeur du pas afin de favoriser la sortie d'un minimum local instable (ou d'un point-selle). Si le minimum local (qui peut être global) est assez stable, le "pic" de la valeur du pas devrait être supporté et ne pas provoquer un changement de minimum. Le pas suit donc un comportement cyclique qui cherche à réduire sa valeur et à la rehausser périodiquement. Chaque cycle est défini par un nombre d'itérations identique et la valeur du pas est compris entre deux bornes choisies comme hyperparamètres. La variation du pas est linéaire et un cycle s'apparente à un comportement \textit{triangulaire}. Une approche parabolique et sinusoïdale ont été proposées sans amélioration notable de performance. \\
+
+\noindent Afin de limiter le temps d'apprentissage et de "forcer" la convergence vers un minimum local, une limitation sur la borne supérieure est applicable. Elle consiste à modifier la borne supérieure pour le cycle t tel que $max_{LR_t}=\frac{max_{LR_0}}{t}$. Ainsi, le pas tend vers 0, ce qui forcera le réseau à avoir un comportement de convergence et non d'exploration. Une alternative est possible en choisissant une minoration par un facteur exponentiel, ce qui favorisera une diminution plus "lissée". Une illustration du comportement du pas est visible sur la Figure \ref{cyclicallr}.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{./tex/fondamentaux/cyclicallr.png}
+    \caption{Comportement du pas avec Cyclical LR avec une borne supérieure constante et une borne supérieure dégressive}
+    \label{cyclicallr}
+\end{figure}
+
+\paragraph{Détermination des bornes supérieures et inférieures des valeurs du pas: le LR Range test}
+Une contrainte de Cyclical LR est la détermination des bornes de l'intervalle des valeurs potentielles du pas. Afin de résoudre ce problème, un test a été crée: le \textbf{LR Range test}\cite{cyclicallr}.\\
+
+\noindent Ce test consiste à définir un pas très faible, supposons $10^{-7}$ et à l'augmenter progressivement à chaque itération en observant l'impact sur le comportement de l'apprentissage. Lorsque le pas est faible, l'apprentissage stagne car la convergence est très lente. En augmentant, la convergence va se réaliser, ce qui permettra à l'erreur de diminuer. Lorsque le pas sera trop important, le modèle divergera et l'erreur augmentera. Nous pouvons ainsi observer trois régions qui permettront de définir un intervalle pertinent pour les valeurs du pas. Une illustration du test est visible sur la Figure \ref{lrrangetest}. Il est important de noter qu'il s'agit d'un test empirique et que ses résultats sont dépendants du jeux de données. L'intervalle obtenu n'est donc pas généralisable.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{./tex/fondamentaux/lrrangetest.png}
+    \caption{Exemple du LR Range test}
+    \label{lrrangetest}
+\end{figure}
+
+\paragraph{Approche par cycle: Exploring Stochastic Gradient Descent with Warm Restarts (SGDR)}
+
+\noindent L'idée de SGDR\cite{sgdr} est une variante de Cyclical LR et exploite aussi une comportement cyclique. Contrairement à Cyclical LR qui possède un comportement linéaire dans la variation du pas, SGDR réalise une diminution du pas avant de le réinitialiser à la valeur de la borne supérieure, ce qui entraîne une variation non continue lors de la réinitialisation. Les bornes des valeurs du pas sont obtenues par LR Range test. Une illustration du comportement du pas est visible sur la Figure \ref{sgdr}.\\
+
+\noindent SGDR utilise une approche \textit{cosinus annealing}\footnote{Diminution du pas selon une fonction cosinus} afin de diminuer la valeur du pas. Ainsi, pour le cycle i, le pas est égal à:
+$$\eta_t=\eta_{min}^i+\frac{1}{2}(\eta_{max}^i-\eta_{min}^i)(1+cos(\frac{T_{cur}}{T_i}\pi))$$
+
+\noindent Avec $\eta_{min}^i$, $\eta_{max}^i$, valeur minimum et maximum du pas, $T_{cur}$, le nombre d'itérations réalisées depuis la dernière réinitialisation du cycle et $T_i$, le nombre d'itérations du cycle i. Nous pouvons ainsi voir que si t=0 et $T_{cur}=0$, $\eta_t=\eta_{max}^i$. Si $T_{cur}=T_i$, alors la composante cosinus sera égale à -1 et ainsi $\eta_t=\eta_{min}^i$. $\eta_{min}^i$ et $\eta_{max}^i$ sont des hyperparamètres.\\
+
+\noindent Afin d'améliorer les performances, il est possible d'augmenter la durée d'un cycle au fil des cycles. Pour augmenter progressivement le nombre d'itération par cycle, il est conseillé de remplacer $T_i=T_0$ par $T_i=T_0*T_{mult}$ avec $T_{mult}$, coefficient multiplicateur incrémenté à chaque cycle selon une valeur choisie. Il est possible de faire varier $\eta_{min}^i$ et $\eta_{max}^i$ selon le cycle. Cependant, pour des raisons de simplicité, il est préférable de choisir des valeurs constantes.\\
+
+\noindent Lors de la fin d'un cycle, la valeur du poids considéré n'est pas réinitialisée mais conservée. Ainsi, si $x_t$ est la dernière valeur du poids à la fin du cycle, lors de la première itération du cycle suivant, la mise à jour du poids sera basée sur la valeur $x_t$. Cette caractéristique permet de conserver une continuité dans le comportement du poids et de ce fait, les valeurs des \textit{momentum}\footnote{Cette notion sera expliquée par la suite.} sont exploitables par exemple.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.4]{./tex/fondamentaux/sgdr.png}
+    \caption{Comportement du pas avec SGDR}
+    \label{sgdr}
+\end{figure}
+
+\paragraph{1Cycle Policy et Super-Convergence: A FAIRE}
+1cycle Policy\cite{1cyclelr}
+
+\paragraph{Snapshot Ensembles}
+\noindent Snapshot Ensembles\cite{snapshot}
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{./tex/fondamentaux/snapshot.png}
+    \caption{Différence entre SGD et Snapshot Ensembles}
+    \label{snapshot}
+\end{figure}
+
+\paragraph{Calcul du moment: Vanilla Momentum}
+\noindent Cette méthode est simple. Elle est calculée en ajoutant à la valeur du gradient (pondéré par le pas), la valeur du gradient précédent pondéré par une constante qui représente l'importance associé au moment. Cette constante est un hyperparamètre choisi par l'utilisateur et souvent défini à 0.9 ou une valeur similaire\footnote{Il faut éviter que sa valeur soit supérieure à 1.}.\\
+
+\noindent Ainsi, le gradient est défini par:
+$$v_t = \gamma v_{t-1} - \eta \nabla_\theta J( \theta)$$
+$$\theta = \theta + v_t $$
+
+\paragraph{Calcul du moment: Nesterov Accelerated gradient (NAG)}
+\noindent Nesterov Accelerated gradient\cite{nesterov} (NAG) est une variante du Vanilla Momentum. Alors que l'approche Vanilla Momentum n'anticipe pas ses positions futures, l'approche par Nesterov cherche à approximer la valeur future du gradient afin d'orienter son moment. L'estimation du gradient ne se fait donc plus à partir position actuelle mais à la position "prédite" après l'approximation de la position future. L'amplitude des évolutions est donc mieux maîtrisée et permet une évolution plus précise et rapide. Cette approche possède une preuve théorique plus forte, est plus efficace dans le cadre d'optimisation convexe et semble donner de meilleurs résultats expérimentaux.\\
+
+\noindent Une illustration est visible sur la Figure \ref{nesterovm}. La mise à jour du gradient par Momentum est réalisée à partir de l'état actuel (point rouge) alors qu'avec l'approche Nesterov, la mise à jour est réalisée à partir de la position prédite (extrémité de la flèche verte). Pour plus d'explication, consulter le site \url{http://cs231n.github.io/neural-networks-3/#sgd}.
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.3]{./tex/fondamentaux/nesterov.png}
+    \caption{Différence entre Momentum et Nesterov Momentum}
+    \label{nesterovm}
+\end{figure}
+
+\noindent Ainsi, le gradient est défini par:
+$$v_t = \gamma v_{t-1} - \eta \nabla_\theta J( \theta + \gamma v_{t-1} )$$
+$$\theta = \theta + v_t $$
+
+\paragraph{Méthode adaptative: Adagrad}
+\noindent Adagrad\cite{adagrad} modifie le pas afin qu'il devienne dynamique et dépendant du paramètre optimisé. Ainsi, un paramètre ayant été peu modifié (en terme de variation de valeur) aura un pas important alors qu'un paramètre régulièrement mis à jour aura un pas minoré. Cette méthode nous émancipe de l'étude d'une valeur pour le pas, si ce n'est la détermination d'une valeur initiale (souvent placé à 0.01). En effet, il a été montré empiriquement qu'il est souvent plus efficace d'avoir un pas variable selon l'état du réseau.\\
+
+\noindent Supposons une mise à jour d'un poids par une approche SGD \textit{classique}. Nous avons:
+$$g_{t, i} = \nabla_\theta J( \theta_{t, i} )$$
+$$\theta_{t+1, i} = \theta_{t, i} - \eta \cdot g_{t, i}$$
+
+\noindent Dans le cas de \textit{Adagrad}, nous avons alors:
+$$\theta_{t+1, i} = \theta_{t, i} - \dfrac{\eta}{\sqrt{G_{t, i} + \epsilon}} \cdot g_{t, i}$$
+$$G_{t, i}=\sum_{j=1}^t g_{j, i}^2$$
+
+\noindent Le pas est ainsi minoré selon la somme au carré de l'ensemble des gradients précédents. L'utilisation de $\epsilon$ permet d'éviter le cas interdit de la division par 0. Sa valeur est constante et très faible. $10^{-8}$ par exemple.\\
+
+\noindent La faiblesse de cette méthode est associée au facteur uniquement dégressif de la valeur du pas. En effet, selon cet optimizer, il ne peut "que" diminuer. Ainsi, au fil des apprentissages, le pas diminuera jusqu'à devenir infinitésimal et figera le réseau. Dans le cas d'apprentissage très profond, cette limitation est très problématique car la convergence n'est pas atteinte avant le blocage du pas.
+
+\paragraph{Méthode adaptative: AdaDelta}
+\noindent AdaDelta\cite{adadelta} est une variante de Adagrad qui corrige le problème de la minoration agressive du pas. Ainsi, au lieu de considérer les différents gradients identiquement, cet optimizer se concentre sur une fenêtre des derniers gradients calculés en minorant proportionnellement les gradients selon leur ancienneté. Il propose aussi une méthode pour supprimer l'initialisation du pas, émancipant l'utilisateur d'un hyperparamètre.\\
+
+\noindent Dans le cas de \textit{AdaDelta}, l'approche de normalisation du pas est définie par:
+$$E[g^2]_t = \gamma E[g^2]_{t-1} + (1 - \gamma) g^2_t$$
+$$\Delta \theta_t = - \dfrac{\eta}{\sqrt{E[g^2]_t + \epsilon}} g_{t}$$
+$$\Delta \theta_t = - \dfrac{\eta}{RMS[g]_{t}} g_t$$
+
+\noindent Ainsi, le facteur $\gamma$ s'applique récursivement sur chaque valeur de gradient selon son ancienneté et permet de maîtriser la valeur du pas\footnote{Il est conseillé d'exploiter une valeur entre 0.5 et 0.9}. Dans les faits, l'équation précédente est une approche naïve. En effet, elle présente un problème potentiel lié à l'unité de $\Delta \theta_t$. Ce problème est d'ailleurs présent avec les optimizers par moment et Adagrad.\\
+
+\noindent Supposons une mise à jour par SGD classique pour un poids $\theta$ donné. Nous avons donc:
+$$\Delta \theta = - \eta g$$
+
+\noindent Soit $U_{\Delta \theta}$, unité de $\Delta \theta$ et f, fonction de perte. Nous avons donc:
+$$U_{\Delta \theta} \propto U_{g} \propto \frac{\partial f}{\partial \theta} \propto \frac{1}{U_\theta}$$
+
+\noindent \textbf{Remarque}: On fait l'hypothèse que la fonction de perte n'a pas d'unité.\\
+
+\noindent On observe que les unités ne sont pas en phase. En effet, d'après l'équation de mise à jour des poids, $U_{\Delta \theta}$ devrait être égal à $U_\theta$.\\
+
+\noindent Pour corriger cette erreur, il a été proposé de s'inspirer d'une méthode du seconde ordre telle que la méthode de Newton qui repose sur une approximation hessienne.
+Ainsi, nous avons dorénavant:
+$$\Delta \theta = -H^{-1} g$$
+
+\noindent H correspond à la dérivée seconde de la fonction de perte. Ainsi, nous obtenons:
+$$U_{\Delta \theta} \propto U_{H^{-1}g} \propto \frac{\frac{\partial f}{\partial \theta}}{\frac{\partial^2 f}{\partial^2 \theta}} \propto U_\theta$$
+
+\noindent On observe que l'unité est respectée. Cette approche est donc efficace. Néanmoins, il faut définir le paramètre $H^{-1}$.
+
+$$U_{\Delta \theta} = \frac{\frac{\partial f}{\partial \theta}}{\frac{\partial^2 f}{\partial^2 \theta}}$$
+$$\frac{1}{\frac{\partial^2 f}{\partial^2 \theta}}=\frac{U_{\Delta \theta}}{\frac{\partial f}{\partial \theta}}$$
+$$H^{-1}=\frac{U_{\Delta \theta}}{\frac{\partial f}{\partial \theta}}$$
+
+\noindent D'où:
+$$\Delta \theta =\frac{U_{\Delta \theta}}{\frac{\partial f}{\partial \theta}}g$$
+
+\noindent D'après l'équation obtenue par l'approche naïve, nous avons:
+$$\Delta \theta_t = - \dfrac{\eta}{RMS[g]_{t}} g_t$$
+
+\noindent Il reste à modifier le numérateur afin de respecter l'unité. Pour cela, nous pouvons utiliser la même approche que pour le dénominateur soit:
+$$E[\Delta \theta^2]_t = \gamma E[\Delta \theta^2]_{t-1} + (1 - \gamma) \Delta \theta^2_t$$
+$$RMS[\Delta \theta]_{t} = \sqrt{E[\Delta \theta^2]_t + \epsilon}$$
+
+\noindent Nous avons donc:
+$$\Delta \theta_t = -\dfrac{RMS[\Delta \theta]_{t}}{RMS[g]_{t}} g_{t}$$
+
+\noindent Malheureusement, la valeur $RMS[\Delta \theta]_{t}$ est inconnue. Afin de l'approximer, on fait l'hypothèse que la courbe est \textit{localement} lisse. Nous pouvons donc approximer la valeur en exploitant la valeur jusqu'à la dernière mise à jour soit $\Delta \theta_{t-1}$.
+
+\noindent Ainsi:
+$$\Delta \theta_t =  -\dfrac{RMS[\Delta \theta]_{t-1}}{RMS[g]_{t}} g_{t}$$
+$$\theta_{t+1} = \theta_t + \Delta \theta_t $$
+
+\noindent Cette approche est une version "simplifiée" d'une vraie optimisation par méthode de second ordre. En effet, calculer une inversion de matrice est une opération lourde ($O(n^3))$ et ne peut être exploitée. On observera qu'il n'y a plus d'hyperparamètre à définir. On supposera une valeur nulle à $\Delta \theta_0$. \\
+
+\paragraph{Méthode adaptative: RMSprop}
+\noindent Cet optimizer est équivalent à la version naïve d'AdalDelta. Les hyperparamètres sont fixés selon l'équation suivante:
+$$E[g^2]_t = 0.9 E[g^2]_{t-1} + 0.1 g^2_t$$
+$$\theta_{t+1} = \theta_{t} - \dfrac{\eta}{\sqrt{E[g^2]_t + \epsilon}} g_{t} $$
+
+\paragraph{Méthode adaptative: Adam}
+Adam\cite{adam_and_max} est une approche adaptative qui exploite la moyenne des gradients au carré (comme Adadelta et RMSprop) mais aussi la moyenne des gradients. Ainsi, il réalise une estimation de la moyenne (1er moment) et de la variance non centrée du gradient (2nd moment). L'estimation respecte une approche dépréciative selon la position du gradient antécédent.\\
+
+\noindent Adam est défini par:
+$$m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$$
+$$v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2 $$
+
+\noindent $\beta_1$ et $\beta_2$ sont des hyperparamètres et déterminent le pas dépréciatif des gradients antécédents.\\
+
+\noindent Les deux moyennes sont initialisées à 0. De ce fait, leurs estimations sont biaisées (notamment durant les premières itérations). Afin de corriger les estimations, les valeurs non biaisées sont calculées selon:
+
+$$\hat{m}_t = \dfrac{m_t}{1 - \beta^t_1}$$
+$$\hat{v}_t = \dfrac{v_t}{1 - \beta^t_2}$$
+
+\noindent La mise à jour du paramètre est appliquée selon:
+
+$$\theta_{t+1} = \theta_{t} - \dfrac{\alpha}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t$$
+
+\noindent $\epsilon$ apporte une solution au cas insoluble en $t=0$ qui impose une division par 0, ce qui n'est pas réalisable. $\alpha$ est un hyperparamètre comparable au pas d'apprentissage (régulé par le comportement des gradients précédents). Les créateurs de cet optimizer estime qu'une bonne initialisation par défaut pour les différents hyperparamètres serait: $\beta_1=0.9$, $\beta_2=0.999$, $\epsilon=10^{-8}$ et $\alpha=0.001$.\\
+
+\noindent \textbf{Remarque}: Il est possible de réécrire l'équation de manière plus efficiente. En effet, il est équivalent de définir l'équation de mise à jour telle que:
+
+$$\alpha_t=\alpha \frac{\sqrt{1-\beta_2^t}}{1-\beta_1^t}$$
+$$\theta_{t} = \theta_{t-1} - \dfrac{\alpha_t m_t}{\sqrt{v_t} + \epsilon}$$
+
+\noindent Lors de la mise à jour des poids, la dernière itération est souvent bruitée à cause des approximations stochastiques. Afin d'obtenir une meilleure généralisation, un \textit{moyennage} est souvent réalisé. Il a été montré que SGD converge mieux avec $\overline{\theta_t}=\frac{1}{t}\sum_{k=1}^n\theta_k$. Dans le cadre de Adam, une alternative basé sur une moyenne dépréciative (nommée \textit{Temporal Averaging}) peut être appliquée telle que:
+$$\overline{\theta_t}=\beta_2\overline{\theta}_{t-1}+(1-\beta_2)\theta_t$$
+
+\noindent Nous appliquons $\overline{\theta_0}=0$. Cette initialisation est biaisée. L'estimation non biaisée est définie par: $\Hat{\theta_t}=\frac{\overline{\theta_t}}{(1-\beta_2^t)}$.\\
+
+
+\noindent Aujourd'hui, cet optimizer fait office de choix par défaut lorsque aucun autre optimizer présente un intérêt particulier ou qu'aucune étude n'a été faite pour définir le meilleur choix à réaliser. Bien expérimentalement rapide à converger, il est souvent critiqué pour être d'une grande inefficacité dans le cadre de certaines thématiques ou d'être trop sensible à la problématique du minimum local.
+
+\paragraph{Méthode adaptative: AdaMax}
+Dans la cadre d'Adam, le facteur $v_t$ est inversement proportionnel à la norme $l_2$ des gradients précédents (via la valeur $v_{t-1}$). AdaMax\cite{adam_and_max} est une variante de Adam qui généralise en utilisant la norme $l_p$. Nous avons donc:
+
+$$v_t = \beta_2^p v_{t-1} + (1 - \beta_2^p) |g_t|^p$$
+
+\noindent Lorsque p augmente, les normes tendent à devenir numériquement instables d'où l'exploitation de la norme $l_1$ et $l_2$. Cependant, la norme $l_\infty$ présente une stabilité exploitable en plus d'une facilité d'implémentation.\\
+
+\noindent Ainsi, nous obtenons:
+$$u_t = \underset{p \rightarrow \infty}{lim} (v_t)^{1/p} = \beta_2^\infty v_{t-1} + (1 - \beta_2^\infty) |g_t|^\infty$$
+$$u_t = \max(\beta_2 \cdot v_{t-1}, |g_t|)$$
+
+$$\theta_{t+1} = \theta_{t} - \dfrac{\alpha}{u_t} \hat{m}_t$$
+
+\noindent \textbf{Remarque}: l'équation précédente peut être réecrite telle que:
+$$\theta_{t} = \theta_{t-1} - \frac{\alpha}{(1-\beta_1^t)u_t}m_t$$
+
+\noindent De même, le correctif \textit{Temporal Averaging}\footnote{Voir algorithme Adam.} est applicable pour cet algorithme.  Les créateurs de cet optimizer estime qu'une bonne initialisation par défaut pour les différents hyperparamètres serait: $\beta_1=0.9$, $\beta_2=0.999$, $\epsilon=10^{-8}$ et $\alpha=0.002$.\\
+
+\paragraph{Méthode adaptative: Nadam}
+Nadam\cite{Nadam} est une variante de Adam qui exploite \textit{Nesterov Accelerated gradient} (NAG) au lieu de \textit{Vanilla Momentum}. \\
+
+\noindent Pour rappel, \textit{Vanilla Momentum} est défini par:
+$$g_t = \nabla_{\theta_t}J(\theta_t)$$
+$$m_t = \gamma m_{t-1} + \alpha g_t$$
+$$\theta_{t} = \theta_{t-1} - m_t$$
+
+\noindent NAG réalise une estimation plus précise en évaluant la valeur du gradient en considérant le moment du gradient et non uniquement $\theta_t$. Ainsi, NAG est défini par:
+$$g_t = \nabla_{\theta_{t-1}}J(\theta_{t-1} - \gamma m_{t-1})$$
+$$m_t = \gamma m_{t-1} + \alpha g_t$$
+$$\theta_{t} = \theta_{t-1} - m_t$$
+
+\noindent On peut observer que le moment est exploité \textbf{deux fois}: lors de la mise à jour du gradient et lors du calcul de $\theta_{t}$. Afin de simplifier l'implémentation de Nadam, une alternative a été proposée. Elle permet de calculer le moment de l'itération $t+1$ à l'itération t:
+$$g_t = \nabla_{\theta_{t-1}}J(\theta_{t-1})$$
+$$m_t = \gamma m_{t-1} + \alpha g_t$$
+$$\theta_{t} = \theta_{t-1} - (\gamma_{t+1} m_t + \alpha_t g_t)$$
+
+\noindent Pour rappel, Adam est défini par:
+$$m_t = \beta_1 m_{t-1} + (1 - \beta_1) g_t$$
+$$\hat{m}_t = \frac{m_t}{1 - \beta^t_1}$$
+$$\theta_{t} = \theta_{t-1} - \frac{\alpha_t}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t$$
+
+\noindent En réecrivant l'approche \textit{Vanilla Momentum} de Adam par remplacement des variables, nous obtenons l'équation suivante (avec application du correctif de biais):
+$$\theta_{t} = \theta_{t-1} - \dfrac{\alpha_t}{\sqrt{\hat{v}_t} + \epsilon} (\dfrac{\beta_{1,t} m_{t-1}}{1 - \beta^{t}_1} + \dfrac{(1 - \beta_{1,t}) g_t}{1 - \beta^t_1})$$
+
+\noindent En appliquant l'approche NAG, nous avons dorénavant:
+$$\theta_{t} = \theta_{t-1} - \dfrac{\alpha_t}{\sqrt{\hat{v}_t} + \epsilon} (\dfrac{\beta_{1,t+1} m_{t}}{1 - \beta^{t+1}_1} + \dfrac{(1 - \beta_{1,t}) g_t}{1 - \beta^t_1})$$
+
+\noindent Cette approche est applicable aux autres méthodes adaptatives comme Adamax par exemple.
+
+\paragraph{Adam et correctifs théoriques - AdamW}
+
+\noindent Pour favoriser une bonne convergence, différentes méthodes de régulation sont exploitées. La plus répandue est la régularisation par la norme $L_2$ (Voir la partie \ref{l2_reg} pour plus d'informations). Pour rappel, cette régularisation s'applique sur la fonction de perte et est définie par:
+$$ \mathcal{L}_{L_2}=\mathcal{L} + \alpha \norm*{\mathcal{L}}_2^2$$
+
+\noindent Une autre forme de régularisation existe et est très employée dans le cadre des optimizers. Elle se nomme \textit{Weight Decay}\cite{weight_decay}. Contrairement à l'approche par norme (qui agit sur la fonction de perte), \textit{Weight Decay} agit directement sur la valeur du paramètre lors de sa mise à jour en imposant une minoration. Ainsi, lors d'une mise à jour, le paramètre $\theta$ sera défini par:
+$$\theta_{t+1}=(1-\lambda)\theta_t-\alpha \nabla \mathcal{L}(\theta_t)$$
+
+\noindent Dans les faits, ces deux méthodes sont similaires. A tel point qu'elles sont équivalentes dans le cadre de l'optimizer SGD.\\
+
+\noindent \textbf{Preuve}: \\
+
+\fbox{\parbox{\textwidth}{Supposons une approche SGD régularisée par la norme $L_2$ telle que:
+$$ \mathcal{L}_{L_2}=\mathcal{L} + \frac{\lambda'}{2} \norm*{\theta}_2^2$$
+
+\noindent Lors de la mise à jour d'un poids, nous avons donc:
+$$ \theta_{t+1}=\theta_t - \alpha \nabla \mathcal{L}_{L_2}(\theta_t)=\theta_t - \alpha \nabla \mathcal{L}(\theta_t) - \alpha \lambda' \theta_t$$
+
+\noindent Supposons SGD avec l'approche \textit{Weight Decay}:
+$$\theta_{t+1}=(1-\lambda)\theta_t-\alpha \nabla \mathcal{L}(\theta_t)$$
+
+\noindent Les deux approches sont identiques si $\lambda'=\frac{\lambda}{\alpha}$\\}}\\
+
+\noindent Du fait de cette équivalence, la régularisation par norme est souvent considérée  comme \textit{équivalente} à la régulation par Weight Decay. Or, ce n'est \textbf{pas vrai}. Notamment dans le cas des méthodes adaptatives telles que Adam.\\
+
+\noindent Dans de nombreuses implémentations de l'algorithme Adam, appliquer Weight Decay est identique à utiliser la régularisation $L_2$. En d'autres mots, lors de l'utilisation de $L_2$/Weight Decay sur Adam, la valeur $g_t$ devient égale à\footnote{Vous référer à la partie sur Adam pour le détail de l'optimizer Adam (et vous remémorer les notations !)}:
+$$g_{t+1,reg}=\nabla \mathcal{L}(\theta_{t})+\lambda \theta_t$$
+$$\theta_{t+1} = \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t$$
+
+\noindent Afin de corriger cette erreur, AdamW\cite{adamw} a été proposé et implémente correctement Weight Decay. Ainsi, avec AdamW, nous obtenons:
+$$g_{t+1}=\nabla \mathcal{L}(\theta_{t})$$
+$$\theta_{t+1,reg} = \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t + \lambda \theta_{t}$$
+
+\noindent Définir le facteur de Weight Decay est difficile. Néanmoins, il a été montré qu'une petite taille de batch accentue l'effet du Weight Decay. Afin de limiter le risque lié à cette dépendance, il est préférable de normaliser $\lambda$ afin de limiter le risque de biais. Pour cela, il a été proposé:
+$$\lambda_{norm}=\lambda*\sqrt{\frac{b}{BT}}$$
+
+\noindent Avec b, dimension du batch, B, nombre  totale de données d'apprentissage, T, nombre d'epochs. Cette normalisation est instinctive. Il est probable qu'il soit possible de proposer une amélioration notable à cette approche.\\
+
+\noindent Bien que simple, AdamW permet une amélioration notable des performances de l'optimizer Adam. De plus, il est suspecté que SGD soit meilleure que Adam sur certaine problématique du fait de cette erreur théorique de généralisation de la norme $L_2$.
+
+\paragraph{Adam et correctifs théoriques - AMSGrad}
+
+\noindent Les algorithmes adaptatifs basées sur une moyenne pondérée présente une faiblesse théorique. Supposons la valeur $\Gamma_{t+1}$ tel que:
+$$v_t = \beta_2 v_{t-1} + (1 - \beta_2) g_t^2$$
+$$\Gamma_{t+1}=\frac{\sqrt{v_{t+1}}}{\alpha_{t+1}}-\frac{\sqrt{v_{t}}}{\alpha_{t}}$$
+
+\noindent Afin de limiter le risque de convergence indésirable, il est nécessaire que $\Gamma_t$ soit défini positif, i.e $\Gamma_t \succeq 0$ pour tout t. Or, ce n'est pas le cas avec Adam\footnote{Consultez l'article \cite{amsgrad} pour la démonstration mathématique de ce résultat.}.\\
+
+\noindent Cette observation peut laisser penser que Adagrad est une approche, qui, au final, est préférable. Ce n'est pas le cas car la diminution du pas est trop agressive avec cette approche. Il est donc nécessaire de proposer une alternative qui respecte la condition sur $\Gamma_t$ tout en limitant l'agressivité de la diminution imposée.\\
+
+\noindent AMSGrad\cite{amsgrad} est une variante de Adam et respecte la condition sur $\Gamma_t$. Au lieu d'exploiter la moyenne pondérée des gradients passés $v_t$, il utilise le \textit{maximum} des gradients passés, i.e $\hat{v}_t = \text{max}(\hat{v}_{t-1}, v_t)$. De plus, $\beta_1$ est variable et décroissant (par exemple $\beta_{1,t}=\beta_1/t$).\\
+
+\noindent \textbf{Remarque}: Dans l'article de référence, l'utilisation de $\beta_1$ est floue. Le paramètre est considéré comme fixe dans les démonstrations mais variable dans la définition de l'algorithme. Dans les faits, il semblerait que le comportement du coefficient $\beta_1$ soit peu important pour l'efficacité globale de AMSGrad. Néanmoins, une valeur décroissante semble avoir une démonstration théorique confirmée du fait d'articles complémentaires supposant cette condition.\\
+
+\noindent Supposons le cas où $v_{t-1}>g_t^2 > 0$. Adam va provoquer une augmentation agressive du pas d'apprentissage (diminution de $v_t$). Au contraire, Adagrad va diminuer le pas d'apprentissage (augmentation de $v_t$) car il exploite une somme non pondérée. Par opposition, AMSGrad ne va pas modifier le pas d'apprentissage, assurant une meilleure stabilité.\\
+
+\noindent Une explication intuitive peut être donnée à ce résultat pouvant sembler contre-intuitif. Il a été observé que des minibatchs porteurs d'informations utiles sont existants mais rares. De ce fait, leur influence est diminuée car écrasée par la moyenne pondérée. L'utilisation d'une moyenne pondérée provoque un phénomène de mémoire à \textit{court terme} qui limite l'impact des minibatchs utiles, ce qui est désastreux dans le cadre de certaines problématiques.\\
+
+\noindent Ainsi, AMSGrad est défini par:
+\begin{align*}
+\begin{split}
+\beta_{1} &= \beta_{1,1}\\
+\beta_{1,t} &= \beta_{1}\lambda^{t-1}\\
+m_t &= \beta_{1,t} m_{t-1} + (1 - \beta_{1,t}) g_t \\
+v_t &= \beta_2 v_{t-1} + (1 - \beta_2) g_t^2\\
+\hat{v}_t &= \text{max}(\hat{v}_{t-1}, v_t) \\
+\theta_{t+1} &= \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} m_t
+\end{split}
+\end{align*}
+
+\noindent Une autre variante a aussi été proposée pour satisfaire la condition $\Gamma_t$. Nommée ADAMNC, elle est strictement identique à Adam si ce n'est que $\beta_2$ est \textbf{non constant}. Nous avons donc:
+\begin{align*}
+\begin{split}
+\beta_{1} &= \beta_{1,1}\\
+\beta_{1,t} &= \beta_{1}\lambda^{t-1}\\
+\beta_{2,t} &= 1-1/t\\
+\end{split}
+\end{align*}
+
+\noindent Cette approche permet de pondérer différemment l'ensemble des gradients passés. Dans le cadre de ADAMNC, la pondération est constante (si $\beta_2$ est défini comme précédemment), i.e $v_{t,i}=\sum_{j=1}^{t}g^2_{j,i}/t$.
+
+\paragraph{Adam et correctifs théoriques - Nostalgic Adam}
+
+Nostalgic Adam\cite{nosadam} (NosAdam) propose une autre approche pour exploiter les gradients passés afin de calculer le pas d'apprentissage. La particularité est que les gradients anciens ont un poids plus importants que les gradients récents. Pour cela, il est nécessaire de définir des conditions particulières sur la détermination de $\beta_{2,t}$. NosAdam respecte la condition de semi-positivité de $\Gamma_t$. Elle a donc une solidité théorique avérée.
+
+\noindent Ainsi, NosAdam est défini par:
+\begin{align*}
+\begin{split}
+B_t&=\sum_{k=1}^t b_k, \ b_k >0, \ t \geq 1,  B_0=0\\
+\beta_{2,t} &=B_{t-1}/B_t\\
+m_t &= \beta_{1} m_{t-1} + (1 - \beta_{1}) g_t \\
+v_t &= \beta_{2,t} v_{t-1} + (1 - \beta_{2,t}) g_t^2\\
+\theta_{t+1} &= \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} m_t
+\end{split}
+\end{align*}
+
+\noindent \textbf{Remarque}: La détermination de $\beta_1$ est imprécise dans l'article de recherche. Il est variable dans le cadre des démonstrations théoriques mais l'écriture de l'algorithme sous-entend qu'il est constant. Une certaine tolérance doit être envisageable sur ce paramètre...\\
+
+\noindent La condition $\beta_{2,t}=B_{t-1}/B_t$ est une écriture générale. Il a été démontré que la condition de semi-positivité est vérifiée si $B_t/t$ n'est pas croissant, i.e $b_k$ non croissant et $b_k>0$. Elle est notamment avérée lorsque $\beta_{2,t}$ est indépendant des données et uniquement lié à t. \\
+
+\noindent Supposons $\beta_{2,t} =B_{t-1}/B_t$ et $B_t=\sum_{k=1}^t b_k$. De ce fait, nous avons:
+$$v_t=\sum_{k=1}^t \frac{b_k}{B_t}g_k^2$$
+
+\noindent $b_k$ est le poids relatif de $g_k^2$. Or, $b_k$ est non croissant donc les gradients anciens sont majorés par rapport aux récents. Cette approche est l'opposé de la méthode par moyenne pondérée qui majore les gradients récents.\\
+
+\noindent Il est intéressant de noter que les créateurs de NosAdam considère ADAMNC comme un cas particulier de NosAdam. En effet, ADAMNC est défini pour $B_{2,t}=1-1/t$. De ce fait, $v_t=\sum_{k=1}^t \frac{g_k^2}{t}$. On observe qu'il n'y a plus de pondération relative donc que chaque gradient est pondéré identiquement. De même, AMSGrad, à travers l'opérateur max(.), conserve une mémoire \textit{longue-durée} des gradients passés et peut réaliser une pondération importante d'un gradient passé grâce aux spécificités de max(.)\footnote{Il y a une dépendance vis-à-vis de $g_k^2$. En effet, il n'y a pas mémoire du passé dans sa globalité mais que de l'évènement principal caractérisé par max(.). Il s'agit donc d'une mémoire long-terme sélective en plus d'être exclusive.}.\\
+
+\noindent NosAdam définit une classe d'optimizers caractérisée par des conditions sur $\beta_2$. Un cas particulier de NosAam a été proposé: NosAdam-HH. Cette approche exploite une série \textit{hyper-harmonique} pour définir $b_k$ tel que $b_k=k^{-\lambda}$ avec $\lambda \geq 0$.
+
+\paragraph{Méthode adaptative cyclique - AdamWR}
+
+Les optimizers cycliques présentent une efficacité remarquable grâce à leur capacité à s'extraire des minimums locaux peu performants. AdamWR\cite{adamw} propose d'unir AdamW avec \textit{Cosinus Annealing and Warm Restarts}.\\
+
+\noindent AdamW modifie Adam tel que:
+$$\theta_{t+1,reg} = \theta_{t} - \dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t + \lambda \theta_{t}$$
+
+\noindent Dans le cadre de AdamWR, nous avons dorénavant:
+$$\theta_{t+1,reg} = \theta_{t} - \alpha_t(\dfrac{\eta}{\sqrt{\hat{v}_t} + \epsilon} \hat{m}_t + \lambda \theta_{t})$$
+$$\alpha_t=\alpha_{min}^{(i)}+0.5(\alpha_{max}^{(i)}-\alpha_{min}^{(i)})(1+cos(\frac{\pi T_{cur}}{T_i})) $$
+
+\noindent Avec $\alpha_{min}^{(i)}$ et $\alpha_{max}^{(i)}$, valeur minimale et maximale de $\alpha$ durant l'i-ième restart. Pour limiter le nombre d'hyperparamètre, il est commun de considérer ces valeurs comme fixes mais il a été montré que proposer une ajustation à chaque restart pourrait potentiellement améliorer les performances. $T_{curr}$ correspond au nombre d'itérations depuis le dernier restart et $T_i$, le nombre total d'itérations durant le i-ième restart.\\
+
+\noindent Afin d'améliorer cet algorithme, il est préférable d'utiliser une valeur $T_i$ variable selon le nombre de restarts réalisés. Intuitivement, il est préférable d'avoir des restarts réguliers au début de l'apprentissage mais plus rare au fil du temps afin de favoriser une convergence. De ce fait, il est préférable que $T_i$ soit croissant au fil des itérations. Cette pratique est standard dans le cadre des optimizers cycliques. De même, il est nécessaire d'utiliser une valeur \textit{normalisée} du facteur de Weight Decay\footnote{Voir AdamW pour plus d'informations sur cette normalisation.} (dans le cadre du Warm Restarts, nous considérerons T comme nombre d'itération dans le restart actuel). \\
+
+\noindent AdamWR présente une efficacité globalement similaire à AdamW mais sa vitesse de convergence est significativement meilleure. AdamWR rivalise avec SGDWR en terme de performance, ce qui illustre l'hypothèse que les mauvaises performances de Adam sur certains problèmes pourraient être liées à la confusion entre $L_2$/Weight Decay.
+
+\paragraph{Discriminative Fine-Tuning}
+
+\noindent Discriminative Fine-Tuning\cite{dis_fine_tun} est une approche complémentaire aux méthodes vues précédemment qui évalue le pas d'apprentissage selon le comportement vis-a-vis des données\footnote{Le gradient est directement lié aux données d'apprentissage.}.\\
+
+\noindent Les méthodes précédentes considèrent que chaque couche exploite un même pas d'apprentissage pour mettre à jour ses poids. Or, ce postulat est contestable. En effet, les couches les plus basses (les premières couches du réseau) discriminent des phénomènes généralistes\footnote{Par exemple, dans le cadre de l'analyse d'une image, les premières couches discrimineront des structures géométriques simples comme des droites, courbes, cercles etc...}. De ce fait, ces couches sont faiblement spécialisées car non liées à la tâche à discriminer. Par exemple, supposons le cas de l'analyse d'image. Peu importe le type d'objet à discriminer sur les images, son analyse exploitera toujours des structures géométriques simples et récurrentes car chaque phénomène aussi complexe soit-il repose sur des structures simples communes. Ainsi, le comportement discriminant est réalisé essentiellement par les couches les plus hautes (les dernières couches du réseau) qui analysent des structures plus complexes et donc, spécialisées.\\
+
+\noindent Cette observation conditionne l'idée que seule les dernières couches possèdent un vrai pouvoir discriminant. De ce fait, il est nécessaire que les modifications induites par l'exploitation du gradient soit plus importantes pour les couches hautes que les couches basses. En effet, le gradient étant lié aux données et donc au phénomènes observés, il a donc un lien plus fort avec les couches hautes. Ainsi, Discriminative Fine-Tuning propose de modifier le pas d'apprentissage selon la position de la couche mise-à-jour. Les couches les plus hautes auront un pas majoré et les couches les plus basses, un pas minoré. Une illustration est visible sur la Figure\footnote{Les spécificités d'une architecture CNN seront développées dans la suite de cette introduction.} \ref{dfn_cnn}.\\
+
+\begin{figure}
+    \centering
+    \includegraphics[scale=0.35]{./tex/fondamentaux/cnn_fintun.png}
+    \caption{Discriminative Fine-Tuning sur un réseau CNN standard}
+    \label{dfn_cnn}
+\end{figure}
+
+\noindent Plus formellement, supposons un réseau avec L couches. Nous définissons $\theta=\{\theta_0,...,\theta_l,...,\theta_L\}$, les paramètres du réseau avec $\theta_l$, paramètres de la l-ième couche. Alors:
+$$\theta_t^l=\theta_{t-1}^l - \eta^l\nabla_{\theta^l}J(\theta)$$
+
+\noindent Avec $\eta^{l-1}=\eta^l/2.6$ avec $\eta^L=\eta_{max}$ tel que $\eta_{max}$ est la valeur du pas obtenu par l'optimizer choisi (par exemple, Adam). Le facteur 2.6 est un résultat obtenu empiriquement. Il est donc utile de considérer une étude approfondie du meilleur facteur possible selon le type de tâche à accomplir.\\
+
+\noindent \textbf{Remarque}: Dans les faits, cette méthode n'est pas utilisée lorsque l'apprentissage est \textit{from-scratch}\footnote{Un apprentissage from-scratch est un apprentissage à partir de rien, i.e une initialisation aléatoire des poids du réseau.}. En effet, dans cette situation, les poids des couches basses sont aléatoires. De ce fait, les couches basses sont incapables de discriminer un quelconque phénomène. Il est donc nécessaire de les entraîner comme les couches plus hautes.\\
+
+\noindent Au contraire, l'idée de pondérer le pas d'apprentissage est très exploitée lors d'un \textit{apprentissage par transfert}. En effet, dans cette configuration, le réseau initial n'est pas \textit{from scratch} mais déjà entrainé sur une tâche. Le comportement des couches basses n'est donc plus aléatoire mais apte à une discrimination. Ce cas particulier sera étudié dans la suite de cette introduction.
+
+
+\paragraph{Et les méthodes d'optimisation du 2nd ordre ? - A FAIRE}
+
+\paragraph{SGD, calcul distribué et parallélisation - A FAIRE}
+
+\paragraph{Inférence de l'optimizer - Neural Optimization Search}
+PowerSign and AddSign \cite{learninggrad2}
+
+\paragraph{Inférence de l'optimizer - LSTM approach}
+LSTM-Learning\cite{learninggrad}
+
+\paragraph{Quel optimizer choisir ?}
+
+\noindent C'est toujours une question \textbf{sans réponse} ! La liste présentée est non-exhaustive et l'étude des optimizer est encore un sujet de recherche actuel. Il n'existe pas de hiérarchie de performance clairement établie. Seule l'approche empirique est exploitée aujourd'hui. Néanmoins, les méthodes avec un \textit{learning rate} adaptatif semblent être les plus répandues, notamment Adam malgré des performances parfois très mauvaises. L'état de l'art tend à exploiter des approches cycliques bien qu'elles ne soient pas encore pleinement démocratisées. Néanmoins, il n'est pas rare d'observer l'emploi de SGD (avec Momentum) dans des publications actuelles, notamment pour des tâches de traduction (analyse de texte).\\
+
+\noindent \textbf{Important}: A l'heure actuelle, la recherche est encore très manuelle et intuitive, i.e l'homme propose et expérimente lui-même des concepts qu'il invente. Néanmoins, des travaux récents exploitent l'intelligence artificielle pour apprendre à découvrir les concepts performants. Un aperçu a été proposé avec l'inférence de l'optimizer mais cette pratique se généralise avec l'auto-apprentissage de l'architecture d'un réseau dans sa globalité. Cette approche est encore expérimentale mais promet d'être une semi-révolution dans l'exploitation du Deep Learning et de sa Recherche de part la facilité d'innovation et d'expoitation (pour l'industrie) qui en découle.
+
+\subsubsection{Gradient noise}
+
+Afin de favoriser la robustesse du réseau face à des stimulations ambiguës ou inhabituelles, il est intéressant de \textit{bruiter}\cite{gauss_deep} la valeur du gradient durant l'apprentissage afin de renforcer le réseau. Cette approche consiste à ajouter un bruit gaussien (distribution gaussienne centrée en 0 et écart-type variable) à la valeur du gradient calculé à chaque rétropropagation. Ainsi, supposons $g_{i,t}$, le gradient obtenu pour le poids i à l'instant t, alors $g_{i,t,gauss}= g_{i,t} + \mathcal{N}(0,\sigma^2)$ avec $\sigma^2_t = \dfrac{\eta}{(1 + t)^\gamma}$ et $\eta \in [0.01,0.3,1.0]$.\\
+
+\noindent Ainsi, le bruit sera plus important en début d'apprentissage pour forcer le réseau à ne pas converger trop rapidement vers un minimum local\footnote{Favoriser l'exploration des solutions possibles}. Cette méthode serait performante pour les modèles très profonds, limiterait l'impact d'une mauvaise initialisation des poids du réseau et favoriserait "l'échappement" des minimum locaux (qui sont de plus en plus nombreux alors que le modèle s'approfondit). Cette méthode, bien qu'élégante, n'est que peu employée par la recherche et son efficacité incertaine.
+
+\subsubsection{Gradient Clipping}
+Afin de limiter le risque d'explosion du gradient (phénomène nommé \textit{exploding gradient}\footnote{Voir Section \ref{explodsec}}), il est pertinent de borner la valeur du gradient en normalisant sa valeur absolue lorsqu'elle dépasse un seuil défini. Cette méthode est appelée \textit{Gradient Clipping}\cite{clip_deep}. Il existe plusieurs manières de réaliser cette normalisation bien que la majorité des implémentations se limitent à l'utilisation d'une valeur seuil, i.e $|g_{i,t}|>\lambda \Rightarrow |g_{i,t}| = \lambda$. Cette approche est reconnue comme efficace au fil des publications de recherche.
+
+\subsection{ReLu et les dangers du gradient}
+\label{relu_danger}
+Le gradient est l'élément central pour l'apprentissage d'un réseau de neurones. Cependant, trois dangers majeurs sont à considérer pour garantir l'intégrité des gradients: \textbf{Exploding Gradient, Vanishing Gradient et Dead ReLu}.\\
+
+\noindent Un réseau de neurone peut avoir des centaines (ou plus) couches associées à des milliers (ou plus) neurones. De ce fait, le modèle peut être très profond. Nous avons vu que l'apprentissage se base sur la rétropropagation du gradient. Cette rétropropagation est un produit de facteur. Ainsi, plus le poids à mettre à jour est éloignée de la sortie du réseau (couches basses du réseau), plus le degrés du produit est élevé. Cette particularité peut poser problème selon l'architecture du réseau (notamment la profondeur) ou les fonctions de transfert dont la dérivée est comprise dans $[0,1[$ ou strictement supérieure à 1 sur un intervalle quelconque.
+
+\subsubsection{Vanishing Gradient}
+\noindent Dans le cas où la valeur des dérivées partielles des couches intermédiaires est comprise dans $[0,1[$, il y a un risque de \textit{vanishing gradient}. En effet, pour n dans $[0,1[$, $\prod_{k=1}^\infty \alpha_n \underset{\infty}{\longrightarrow} 0$. Cette particularité peut figer le réseau et annuler la mise à jour de neurones éloignés car la mise à jour du poids est infinitésimale.
+
+\subsubsection{Exploding Gradient}
+\label{explodsec}
+\noindent Au contraire, pour des valeurs comprises dans $]1,\infty[$, il y a un risque d'\textit{exploding gradient}. Pour n dans $]1,\infty[$, $\prod_{k=1}^\infty \alpha_n \underset{\infty}{\longrightarrow} \infty$. Ainsi, la valeur du gradient "explose" et peut empêcher une bonne convergence du modèle (évolution du poids trop importante) voire annuler l'apprentissage du réseau avec des valeurs dites NaN (Not A Number) car dépassant les limites matérielles de la représentation des nombres par ordinateur.
+
+\subsubsection{Fonction ReLu et Dead ReLU}
+\label{dead_relu}
+\paragraph{Les avantages et le danger de ReLU}
+\noindent Pour corriger cette difficulté, une fonction d'activation est souvent utilisée pour les couches cachées des réseaux: la fonction ReLu.\\
+
+\noindent La fonction ReLu est définie par: $f(x)=\left\{\begin{array}{ll}0 \ si \ x<0 \\max(0,x) \ si \ x\geq 0\end{array}\right.$\\
+
+\noindent Sa dérivée est nulle sur $]\infty,0]$ et égale à 1 sur $]0,\infty[$. De part les valeurs de sa dérivée, le risque d'exploding gradient est annulé. Néanmoins, la présence d'une dérivée nulle peut laisser penser que le risque de vanishing gradient est présent. Bien que vrai, ce défaut est compensé par la capacité de ReLu à rendre le réseau éparse.\\
+
+\noindent Le risque de sur-apprentissage\footnote{Voir Section \ref{surappsec}} est présent lorsque les neurones deviennent trop inter-dépendants, que ce soit durant la prédiction ou l'apprentissage. L'idée principale, soutenue par l'analogie biologique du cerveau, est que le réseau doit être localement stimulé pour répondre à une entrée. Ainsi, selon l'entrée, l'ensemble du réseau ne doit pas être activé mais seulement une sous-partie capable d'interpréter cette stimulation. La fonction ReLU, nulle pour tout x négatif, permet de simuler ce comportement. De plus, la dérivée de ReLu, semblable à une fonction \textit{Porte}, permet de réaliser des mises à jour éparses du réseau. La présence d'une dérivé nulle (pour x négatif) permet de limiter localement la mise à jour des poids, rendant les évolutions du système localisées et moins inter-dépendantes. En cas de stimulation positive, la dérivée étant de 1, l'influence sur la valeur du gradient est nulle. Cette fonction d'activation permet ainsi d'éteindre des neurones durant la phase de prédiction et force le réseau à avoir une stimulation localisée pour réaliser la prédiction. Durant la rétropropagation, son comportement orchestre les régions du réseau qui apprennent et celles qui dorment. Ainsi, cette fonction permet d'agir sur l'architecture du réseau pour limiter les problèmes de corrélation néfastes entre les neurones qui favorisent le sur-apprentissage. De plus, cette limitation des neurones employés permet de limiter le coût de calcul et ainsi, d'augmenter la vitesse du réseau (en prédiction et apprentissage).\\
+
+\noindent Ces spécificités ont popularisé la fonction ReLu qui est, aujourd'hui, la fonction de référence pour les couches cachées des réseaux neuronaux. Elle est peu employée pour la couche de sortie car elle ne présente que peu de pouvoir explicatif. Les fonction sigmoide/softmax sont préférées pour leur représentation probabiliste ou encore la fonction linéaire standard pour une représentation sans norme spécifique.\\
+
+\noindent Néanmoins, cette fonction est sensible au phénomène appelé \textit{Dead ReLu}. En effet, la dérivée (localement) nulle de la fonction ReLu présente des caractéristiques dangereuses. En effet, dans le cas d'initialisation du réseau avec des poids mal calibrés, il est possible que la stimulation soit fortement négative (peu importe la données d'apprentissage), provocant une sortie nulle permanente du neurone. La dérivée étant nulle, le neurone n'apprend pas (gradient nul) et de ce fait, la sortie ne pourra jamais être autre que nulle durant tout l'apprentissage. Ce comportement est associé à un "neurone mort": le neurone n'apprend pas et retourne une sortie nulle en tout temps. Cette particularité peut entraîner l'inactivité d'une partie plus ou moins importante du réseau et nuire à son efficacité voire le condamner. Afin de lutter contre ce problème, l'utilisation de \textit{Régularisation}\footnote{Voir Section \ref{regsec}} en plus d'une bonne initialisation\footnote{Voir Section \ref{init_weight}}) sont employées.\\
+
+\noindent Afin de lutter contre ce phénomène, des améliorations ont été proposées pour la fonction ReLu (un graphique récapitulatif est visible sur la Figure \ref{elurelu}):
+
+\begin{figure}
+    \begin{tabular}{cc}
+    \centering
+       \includegraphics[scale=0.4]{./tex/fondamentaux/reluelu.png}  & \includegraphics[scale=0.4]{./tex/fondamentaux/relupic.jpg} \\
+    \end{tabular}
+    \caption{Fonction ReLu et ses Variantes}
+    \label{elurelu}
+\end{figure}
+
+
+\paragraph{Leaky ReLU (LReLU)}
+LReLU\cite{randorelu} est définie par: $f(x)=\left\{\begin{array}{ll}\alpha x \ si \ x<0 \\max(0,x) \ si \ x\geq 0\end{array}\right.$ avec $\alpha$ petit (souvent inité à 0.01).\\
+
+\noindent Cette variante permet de conserver la capacité d'apprentissage du neurone en supprimant la possibilité de gradient nul. Néanmoins, la valeur de la dérivée reste très faible (égale à $\alpha$), ce qui peut demander un temps d'apprentissage important pour ré-activer le neurone. De plus, elle demande la détermination d'un nouveau hyperparamètre.
+
+\paragraph{Randomized ReLU (RReLU)}
+RReLU\cite{randorelu} est définie par: $f(x)=\left\{\begin{array}{ll}\alpha^{(\mathcal{U}_i)} x \ si \ x<0 \\max(0,x) \ si \ x\geq 0\end{array}\right.$ avec $\alpha^{(\mathcal{U}_i)}$, valeur aléatoire issue d'une distribution uniforme $\mathcal{U}(m,n)$ avec m < n et $[m,n] \in [0,1[$.\\
+
+\noindent Lors de l'apprentissage, $\alpha^{(\mathcal{U}_i)}$ varie à chaque itérations. Lors du l'évaluation (test) du modèle ou de prédiction, la valeur de $\alpha^{(\mathcal{U}_i)}$ est fixé. L'objectif de l'aléatoire est de diminuer le risque de sur-apprentissage du réseau.
+
+\paragraph{Parameterized ReLU (PReLU)}
+PReLU\cite{prelu_raw}\cite{randorelu} est semblable à Leaky ReLu mais le coefficient $\alpha$ est calculé dynamiquement par backpropagation. Ainsi, $\alpha$ n'est plus un hyperparamètre mais demande un coût de calcul supérieur (très négligeable). PReLu est définie par:
+
+$$f(x_i)=\left\{\begin{array}{ll}\alpha_i x_i \ si \ x_i<0 \\max(0,x_i) \ si \ x_i\geq 0\end{array}\right.$$
+
+\noindent Le paramètre $\alpha_i$ peut être appris selon deux approches:
+\begin{itemize}
+    \item \textbf{Local}: L'approche locale exploite un coefficient $\alpha_i$ pour chaque channel de la couche correspondante. Il y aura donc autant de paramètres appris que de \textit{feature map} en sortie de la couche.\\
+
+    \item \textbf{Global}: L'approche globale exploite un coefficient $\alpha$ unique pour l'ensemble des channels de la couche, ce qui diminue le nombre de paramètres à apprendre durant l'apprentissage.
+\end{itemize}
+
+\noindent Expérimentalement, les deux approches ont des résultats similaires même si l'approche \textit{locale} est légèrement plus performante. Pour les deux approches, le coût computationnel est négligeable car $nbr_{poids} \gg nbr_{\alpha_i}$. Néanmoins, il serait intéressant d'étudier l'impact des deux configurations vis-à-vis du sur-apprentissage et de la capacité de généralisation du modèle.\\
+
+\noindent Le paramètre $\alpha_i$ est entrainé par backpropagation. Ainsi, la mise à jour de sa valeur est dépendante de son gradient. Dans le cadre de l'approche locale, nous avons:
+
+$$\frac{\partial \varepsilon}{\partial \alpha_i}=\sum_{x_i}\frac{\partial \varepsilon}{\partial f(x_i)}\frac{\partial f(x_i)}{\partial \alpha_i}$$
+
+$$\frac{\partial f(x_i)}{\partial \alpha_i}=\left\{\begin{array}{ll}x_i \ si \ x_i<0 \\0 \ si \ x_i\geq 0\end{array}\right.$$
+
+\noindent Avec $\varepsilon$ représentant la fonction de coût. La somme $\sum_{x_i}$ est appliquée car on exploite l'erreur selon l'ensemble des positions de la \textit{feature map}\footnote{Ne pas oublier le comportement de fenêtre glissante dans les réseaux convolutifs. Ainsi, le même neurone est appliqué à chaque position de la feature map considérée, ce qui nécessite de sommer les résultats pour apprendre sur l'erreur globale de l'analyse de la feature map.}.
+
+\noindent Dans le cadre de l'approche globale,  nous obtenons:
+
+$$\frac{\partial \varepsilon}{\partial \alpha}=\sum_{i}\sum_{x_i}\frac{\partial \varepsilon}{\partial f(x_i)}\frac{\partial f(x_i)}{\partial \alpha}$$
+
+\noindent L'erreur est ainsi généralisée sur l'ensemble des channels et sommées pour en extraire sa valeur.\\
+
+\noindent La mise à jour du paramètre suit une approche \textit{momentum} et est caractérisée par:
+$$\alpha_{i}^{k+1}=\beta \alpha_i^{k}+\epsilon \frac{\partial \varepsilon}{\partial \alpha_i^k}$$
+
+\noindent Avec $\beta$, coefficient du \textit{momentum} et $\epsilon$, pas d'apprentissage. \\
+
+\noindent Il est intéressant de noter qu'aucune régularisation n'a été appliquée (notamment $l_2$) car elle a tendance à forcer $\alpha_i$ à tendre vers 0, ce qui rend PReLU comparable à Relu. De plus, sa valeur est non bornée. Néanmoins, expérimentalement, il semble qu'il n'y ait pas de phénomène d'\textit{explosion} de la valeur du coefficient\footnote{La valeur dépasse rarement 1 d'après les expérimentations des créateurs de PReLU.}. Par défaut, l'initialisation de $\alpha_i$ est à 0.25.
+
+\paragraph{Exponential ReLU (ELU)}
+ELU\cite{elu} est définie par: $f(x)=\left\{\begin{array}{ll} \alpha(exp(x)-1) \ si \ x<0 \\max(0,x) \ si \ x\geq 0\end{array}\right.$\\
+
+\noindent Cette fonction permet de borner la valeur d'activation pour $x<0$, augmentant ainsi sa résistance au bruit. Le facteur $\alpha$ est un hyperparamètre fixé.
+
+\paragraph{Concatenated ReLU (CReLU)}
+
+Expérimentalement, il a été montré que les filtres des premières couches d'un réseau tendent à être redondants afin d'extraire l'information issue des \textit{phases} positives et négatives d'un signal donné. Cette faiblesse oblige le réseau à exploiter d'autres filtres pour exploiter l'information perdue par l'application d'une fonction d'activation ReLU (perte de l'information de la phase négative). Par exemple, sur la Figure \ref{phasefilter}, nous pouvons observer un couple de filtres. Le comportement des filtres est similaire mais opposé par la phase. Afin de limiter la redondance de filtre, Concatenated ReLU propose d'extraire l'information intégralement sans la perte imposée par ReLU en considérant aussi les valeurs négatives selon la même approche que ReLu possède avec les valeurs positives.\\
+
+\noindent CReLU\cite{crelu} est ainsi définie par: $f(x)=(max(0,x), max(0, -x))$.\\
+
+\noindent  Elle est très similaire à Absolute Value Rectification (AVR) mais au lieu d'additionner les deux sorties intermédiaires, CReLU les concatène. De ce fait, la sortie de cette fonction d'activation est de profondeur 2. Cette fonction d'activation permet ainsi de limiter le nombre de filtres nécessaires en optimisant l'extraction d'informations d'un signal donné.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.4]{./tex/fondamentaux/filterphase.png}
+\caption{Exemple de deux filtres de phase opposée}
+\label{phasefilter}
+\end{figure}
+
+\paragraph{Scaled Exponential Linear Units (SeLU)}: \\
+La fonction est définie par: $f(x)=\lambda\left\{\begin{array}{ll} \alpha(exp(x)-1) \ si \ x<0 \\max(0,x) \ si \ x\geq 0\end{array}\right.$\\
+
+\noindent  \textbf{Attention}: Cette partie nécessite la connaissance des fondamentaux d'architecture d'un réseau profond.\\
+
+\noindent  Cette fonction est une des composantes utilisée dans le cadre des Self-Normalizing Neural Networks\cite{snn} (SNN). Cette architecture propose une autre approche afin de résoudre la problématique de la normalisation des données dans les réseaux très profonds. Au lieu d'employer des méthodes de normalisation externes\footnote{Comme le Batch Normalisation par exemple} appliquées à la sortie d'une fonction d'activation, la sortie de la fonction d'activation fournit des valeurs déjà normalisées. Pour que cette spécificité soit réalisée, il est nécessaire d'employer des fonctions SELU initialisées selon la distribution $W\sim \mathcal{N}\big(0,\frac{\textbf{1}}{n_{in}}\big)$. Cette distribution est comparable aux distributions standards (MSRA/Xavier par exemple) mais la variance n'exploite pas le facteur 2 qui neutralise les effets de la fonction d'activation. Pour plus de détails, notamment mathématiques, veuillez vous référer à l'article associé \cite{snn}\footnote{C'est un article très mathématique et lourd à la lecture !}.
+
+\subsection{Initialisation des hyperparamètres - A FAIRE}
+\subsubsection{Initialisation des poids}
+\label{init_weight}
+L'initialisation des poids d'un réseau est un critère important à considérer. Une mauvaise initialisation peut provoquer la divergence de réseau, notamment dans le cas de réseau profond. Il est donc important de réaliser une initialisation limitant ce danger. L'objectif de l'initialisation est de faire en sorte que les sorties des neurones aient approximativement la même variance, de même que pour les valeurs des gradients obtenus par rétropropagation. Plusieurs approches ont été popularisées ces dernières années:\\
+
+\noindent \textbf{Basé sur la variance des sorties de neurones uniquement}:
+
+\begin{itemize}
+    \item \textbf{Calibration de la variance}: L'initialisation avec calibration de la variance revient à choisir aléatoirement une valeur dans une distribution normale définie par: $W\sim \mathcal{N}\big(0,\frac{1}{n_{in}}\big)$ avec $n_{in}$, nombre d'entrées du neurone (ou nombre de neurones sur la couche précédente).\\
+
+    \item \textbf{ReLu Calibration}: La fonction ReLu est la fonction d'activation la plus populaire et utilisée actuellement (pour les couches cachées). Son étude est encore un sujet de recherche important et dynamique. Une publication récente \cite{relu_deep} préconise une initialisation telle que: $W\sim \mathcal{N}\big(0,\frac{2}{n_{in}}\big)$ ou via une distribution uniforme: $W\sim U\big[-\sqrt{\frac{6}{n_{in}}},\sqrt{\frac{6}{n_{in}}}\big]$.\\
+
+    La distribution normale est la distribution standard pour initier les poids associées à la fonction ReLu.
+\end{itemize}
+
+\noindent \textbf{Basé sur un compromis entre la variance des sorties de neurones et des gradients}:
+
+\begin{itemize}
+    \item \textbf{Xavier initialization}: D'autres approches préconisent un compromis entre la variance des sorties des neurones et des gradients calculés par rétropropagation. La méthode préconisée devient ainsi une dépendante du nombre d'entrées et de sorties d'un neurone\footnote{Lors de la rétropropagation, ce sont les sorties des neurones qui sont exploitées}. La première approche correspond à une distribution normale: $W\sim \mathcal{N}\big(0,\frac{2}{n_{in}+n_{out}}\big)$ et la seconde, une distribution uniforme: $\mathbb{W}\sim U\big[-\frac{\sqrt{6}}{\sqrt{n_{in}+n_{out}}},\frac{\sqrt{6}}{\sqrt{n_{in}+n_{out}}}\big]$.
+\end{itemize}
+
+\noindent \textbf{Important}: Par défaut, il est \textbf{important} d'éviter les initialisations aléatoires sur un intervalle \textit{élevé}, de même qu'initialiser à 0 l'ensemble des poids (sauf spécificité d'une méthode).
+
+\subsubsection{Initialisation et détermination des hyperparamètres - A FAIRE}
+%http://cs231n.github.io/neural-networks-3/#distr
+
+\subsection{Jeu d'apprentissage et spécificités}
+Une des plus grandes contraintes du Deep Learning est la création d'un jeu de données d'apprentissage\footnote{On utilise souvent l'anglicisme \textit{dataset}} de \textit{qualité}. La notion de \textit{qualité} repose sur différents critères:
+\begin{itemize}
+    \item \textbf{Spécialisation}: Un jeu de données doit se focaliser sur le phénomène qu'il représente. Par exemple, si l'on souhaite détecter des chats sur une image, il est évident que le jeu de données d'apprentissage devra contenir des chats...
+    \item \textbf{Représentativité}: Un jeu de données doit être capable de représenter le phénomène sous toutes ses formes (tout du moins un maximum) afin de rendre la discrimination représentative de ses différentes hypothèses possibles. Supposons un jeu de données pour discriminer tout type de chats. Il est donc intéressant d'avoir des données variables selon:
+    \begin{itemize}
+        \item \textbf{Spécificité du phénomène}: La première condition est de représenter un maximum de spécificité que peut possède le phénomène. Par exemple, dans le cas d'un chat, il est intéressant de mêler des chats de différentes races, tailles, couleurs, posture et mouvement etc...
+        \item \textbf{Spécificité du contexte}: Le phénomène ne sera pas toujours représenté de manière centrée sur l'image tout en occupant la majorité de sa surface. C'est ainsi nécessaire de considérer des cas où le phénomène est localisé sur une sous-partie de l'image. Il est donc important d'avoir des images de l'environnement où se développe le contexte. Par exemple, en supposant le cas des chats, il est utile d'avoir des cas où la présence du chat est plus (ou moins) importante\footnote{La localisation des zones devrait être uniformément (idéalement) distribuée}, une diversité d'environnement (un chat dans un appartement, dans la rue,...)
+        \item \textbf{Spécificité du capteur}: Selon le capteur, la nature de l'image peut varier indépendamment du phénomène et de son environnement. Un appareil haute définition ne donnera pas la même qualité d'image qu'une caméra standard. Il est donc nécessaire de considérer cette spécificité en exploitant des images issues de sources différentes.
+        \item \textbf{Spécificité de détérioration}: Il est possible qu'une image soit détériorée (capteur défectueux, présence de bruit, etc...). Exploiter des données bruitées permet donc de renforcer la robustesse du modèle.
+    \end{itemize}
+    \item \textbf{Biais et Indépendance}: Cet aspect est un sujet de recherche intense et un des piliers de l'\textit{Ethique} de l'Intelligence Artificielle. Afin d'apprendre, un modèle (tout comme un être humain) devra posséder des biais de décision. Comprendre parfaitement et prévenir des dérives prédictives (comme les \textit{prédictions auto-génératrices}) nécessitera la maîtrise et la détection de ces biais. Il est ainsi pertinent d'étudier les biais que possède notre jeu d'apprentissage (en considérant les particularités des méthodes d'apprentissage de l'algorithme utilisé) en les détectant dans un premier cas et si possible, les supprimer (ou modifier) si ils représentent un danger. Réaliser cette analyse est encore un travail immature et non abouti mais \textbf{capital} à moyen-terme.
+\end{itemize}
+
+\subsection{Prédiction multi-label et multi-classe}
+\label{multiclasslabel}
+\subsubsection{Généralités}
+La caractérisation \textit{multi-classe} / \textit{multi-label} est généralement réalisée dans le cadre d'une tâche de classification.\\
+
+\noindent Une classification est caractérisée comme \textit{mono-classe} lorsqu'elle ne discrimine qu'une classe. Il s'agit donc d'une classification binaire (Est / N'est pas). Au contraire, dans le cas d'une classification \textit{multi-classe}, le réseau doit discriminer plusieurs classes afin de prédire les caractéristiques de l'entité inférée.\\
+
+\noindent L'architecture du réseau est dépendante du type de classification souhaitée. En effet, dans le cadre d'une classification binaire, un seul neurone de sortie est nécessaire. Ce neurone aura pour fonction de calculer $P(Y_{i,classe}| X_i, \theta)$, i.e la probabilité que l'entité i soit de la classe $Y_{classe}$ sachant ses caractéristiques X et l'architecture du réseau définie par $\theta$.\\
+
+\noindent Au contraire, dans le cadre d'une tâche multi-classe, le réseau doit prédire n probabilités associées aux n classes définies. De ce fait, le réseau doit être capable de prédire $\underset{j \in [1,n]}{P(Y_{i,classe_{j}}| X_i, \theta)}$.\\
+
+\noindent Un neurone est capable de prédire la probabilité associée à une classe. Pour prédire n probabilités associées à n classes, il est donc nécessaire d'avoir n neurones sur la couche de sortie.\\
+
+\noindent On parle de classification \textit{multi-classe} lorsque le modèle discrimine plusieurs classes mais qu'une entité ne peut être associée qu'à \textbf{une} classe uniquement, i.e les classes sont \textbf{mutuellement exclusives}. Par exemple, supposons un modèle de classification multi-classe capable de discriminer les chats et les chiens, les entités inférées par ce modèle seront classées comme chat \textbf{ou} comme chien uniquement. Or, le modèle théorique présenté précédemment calcule $\underset{j \in [1,n]}{P(Y_{i,classe_{j}}| X_i, \theta)}$. Pour respecter le cadre de la classification multi-tâche, le réseau doit dont être modifié pour calculer $argmax(\underset{j \in [1,n]}{P(Y_{i,classe_{j}}| X_i, \theta))}$.\\
+
+\noindent Au contraire, on parle de classification multi-label lorsqu'une entité peut être définie par \textbf{plusieurs classes}. Elles ne sont donc pas exclusives. Par exemple, un homme à vélo peut être catégorisée comme \textit{homme} et \textit{cycliste}. De ce fait, la classification multi-label, au contraire de la classification multi-classe, n'impose pas l'utilisation de \textit{argmax}.\\
+
+\noindent En résumé, la classification \textit{multi-classe} prédit positivement une unique classe parmi un ensemble de classes alors que la classification \textit{multi-label} en prédit positivement aucune, une (ou plusieurs) parmi un ensemble de classes.\\
+
+\noindent La différence d'architecture entre ces deux approches repose essentiellement sur la fonction d'activation de la couche de sortie. Ainsi, dans le cadre d'une classification \textit{multi-classe}, la couche de sortie sera associée à une activation par la fonction \textit{softmax} qui permet d'extraire la probabilité la plus élevée en plus de respecter la condition d'exclusion. Néanmoins, cette fonction impose $\sum_i P(Y_i | X) = 1$. Cette hypothèse est plus \textit{forte} que la condition d'exclusion. En effet, elle impose que l'\textit{univers} corresponde à l'ensemble des classes du modèle, ce qui est une contrainte forte. \\
+
+\noindent Au contraire, dans le cadre d'une classification multi-label, chaque neurone de la couche de sortie sera associé à la fonction \textit{sigmoïde} qui permet de calculer la probabilité d'appartenance à une classe indépendamment pour chaque classe. Chaque classe étant indépendante des autres, il n'y a pas d'impératif de somme égale à 1.\\
+
+\noindent \textbf{Remarque}: La fonction \textit{softmax} extrait la probabilité la plus forte proportionnellement aux valeurs de l'ensemble de probabilités obtenues\footnote{L'utilisation de \textit{softmax} impose l'hypothèse que chaque entité puisse être caractérisée par une classe du modèle.}. De ce fait, une classe est nécessairement prédite \textit{positivement} bien qu'il soit possible que l'entité analysée ne corresponde pas à une des classes du réseau. Par exemple, supposons un réseau capable de discriminer les cyclistes et les chats. Si on présente un chien, le réseau déterminera des probabilités faibles pour les classes cyclistes et chats. Néanmoins, la fonction \textit{softmax} prédira nécessairement des probabilités indépendamment de la valeur "absolue" de ces prédictions. La classe prédite sera probablement chat car un chat "ressemble plus" à un chien qu'à un cycliste. Comme un chien ressemble bien plus à un chat qu'à un cycliste, \textit{softmax} prédira une probabilité élevée pour la classe \textit{chat}. Cette particularité impose de créer une classe \textit{neutre} qui correspond à une entité non caractérisée par les autres classes. Ainsi, si un modèle discrimine n classes, dans les faits, il devra en discriminer n+1 pour considérer la possibilité d'une image non associée à une de ces classes.\\
+
+\noindent Au contraire, la classification \textit{multi-label} repose sur la valeur absolue des probabilités et non la valeur relative entre ces probabilités. Chaque probabilité étant indépendante, il est tout à fait possible qu'une prédiction de ce type de réseau soit négative pour chacune des classes. Ainsi, il n'y a pas d'impératif à la création d'une classe \textit{neutre}. \\
+
+\noindent Bien que l'approche \textit{multi-label} soit plus souple et modulable, elle est plus dure à exploiter dans le cadre de l'apprentissage. L'approche \textit{multi-classe} est souvent préférée lorsque le problème traité le permet.
+
+\subsubsection{Prédiction et distribution de données}
+La difficulté principale de la prédiction \textit{multi-classe} (ou \textit{multi-label}) est associée à la distribution des données d'apprentissage. En effet, il est possible qu'elle soit très déséquilibrée avec, par exemple, une classe fortement majoritaire et d'autres minoritaires. Cette particularité du jeu d'apprentissage induira un biais dans l'apprentissage qui peut être responsable d'un échec critique de l'apprentissage. Ce type de problématique est très répandu, notamment dans les tâches de détection d'entités rares qui sont très présentes dans le domaine médicale par exemple.\\
+
+\noindent Supposons une tâche qui consiste à détecter les tweets \textit{toxiques} et à les classifier selon différentes catégories (acharnement, contenu sexuel, discrimination raciale). Nous supposerons qu'un tweet peut appartenir à plusieurs catégories. Nous sommes donc dans le cadre d'une prédiction \textit{multi-label}.\\
+
+\noindent Notre jeu d'apprentissage correspond à un ensemble de tweets obtenus sur un intervalle continu et dont les tweets sont labellisés sans considération de leurs particularités (sain ou toxique). Il est évident que la majorité des tweets sont "sains" et de ce fait, non classifiés dans les sous catégories de toxicité. Ainsi, la majorité des tweets d'apprentissage sont négatifs pour chacune de ces classes, i.e présentent un vecteur de label égal à $[0, 0, 0]$. Nous supposerons les sous-catégories comme uniformément distribuées et la répartition sain/toxique équivalente à 95\%-5\%. \\
+
+\noindent Le risque principal induit par ce type de données déséquilibrées est la (possible) convergence vers un minimum local sans pouvoir explicatif. En effet, nous avons 95\% des données classées comme sain. Ainsi, si le modèle considère que toute donnée est saine, alors il aura 95\% de bonne prédiction sur son jeu d'apprentissage. Les données d'apprentissage associées à un tweet toxique étant rares, leurs impacts sur la fonction de perte sont \textit{noyés} dans l'ensemble des "bonnes prédictions", ce qui diminuera grandement leur pouvoir d'apprentissage. Ce phénomène est classique et particulièrement critique dans le cadre de l'apprentissage machine en général\footnote{Ce problème illustre la nécessité d'une étude préalable des données afin de détecter ce phénomène}.
+
+\subsubsection{Méthodes d'apprentissage}
+Afin de permettre un meilleur apprentissage, différentes approches sont envisageables. Elles sont appliquées au niveau des données d'apprentissage ou au niveau du modèle entraîné. Ces méthodes favorisent le phénomène de sur-apprentissage (voir Section \ref{surappsec}). Elles doivent donc être utilisées avec grande attention.\\
+
+\paragraph{Au niveau des données}
+Les principales approches au niveau des données reposent sur des méthodes d'\textit{échantillonnage}. Elles sont divisées en deux groupes:
+
+\begin{itemize}
+    \item \textbf{Undersampling}: Afin d'uniformiser les distributions, ce type d'approche propose de supprimer aléatoirement des données de la classe majoritaire. Bien que simple d'utilisation, cette méthode est \textit{destructrice} et peut conduire à la perte de données au pouvoir explicatif important.\\
+
+    Afin de lutter contre ce risque, des améliorations ont été proposées afin de permettre la sélection de données au faible pouvoir explicatif. Elles analysent les données pour détecter les caractéristiques redondantes et se focaliser sur la suppression des \textit{doublons}. Des approches de \textit{Data Decontamination} sont envisageables aussi.
+
+    \item \textbf{Oversampling}: Cette méthode \textit{augmente} les données dont la classe est sous-représentées. L'approche standard consiste à répliquer aléatoirement des données dont la classe est minoritaire afin d'atteindre une distribution uniforme des classes. Néanmoins, un risque élevé de sur-apprentissage est à considérer.\\
+
+    Pour améliorer le pouvoir explicatif des données crées, des améliorations ont été faites notamment via l'utilisation de données artificiellement crées. Pour cela, l'interpolation d'entités \textit{voisines} est exploitée. Les méthodes standards reposent sur l'utilisation du clustering qui permet de considérer l'équilibre intra/inter-classe. De même, exploiter le \textit{Boosting} permet d'isoler les exemples \textit{difficiles} et de cibler l'augmentation des données sur des exemples à problèmes\footnote{Il y a un risque important de sur-apprentissage avec cette approche.}. Une autre approche (propre au Deep-Learning) consiste à créer des \textit{minibatch} dont la distribution des classes est garantie uniforme par la sélection aléatoire d'exemples issus de chacune des classes.
+\end{itemize}
+
+\paragraph{Au niveau du modèle}
+D'autres méthodes s'appliquent au niveau de l'architecture du modèle, de sa méthode d'apprentissage et de son rapport avec les données utilisées.
+
+\begin{itemize}
+    \item \textbf{Calibration}: La \textit{Calibration} est une méthode pour ajuster la prédiction réalisée par le modèle afin de limiter le biais induit par la distribution des données uniformisée par les méthodes ci-dessus. L'approche standard consiste à compenser le biais prédictif par la considération de la probabilité \textit{a priori}\footnote{Des bases sur l'inférence Bayésienne sont nécessaires.} de la classe prédite. \\
+
+    Il a été montré qu'un réseau neuronal estime la probabilité à posteriori d'une entité. Par conséquent, un réseau neuronal estime:
+    $$y_{classe}(x) = p(classe|x) = \frac{p(classe)*p(x|classe)}{p(x)}$$
+    p(classe) est biaisé par la méthode d'échantillonnage qui ajuste les données d'apprentissage. Afin de corriger ce biais, il est nécessaire de considérer la distribution initiale des données. Ainsi nous obtenons:
+    $$y_{classe}(x_i)^{calibrated} = y_{classe}(x_i) * \frac{Card(x_{classe})}{Card(x)}$$
+
+    \item \textbf{Pondération des données d'apprentissage}: Afin de considérer le déséquilibre des distributions, il est possible de modifier l'importance associée à une donnée selon sa classe. L'approche traditionnelle repose sur une pondération en fonction de la fréquence de classe. Ainsi, une données appartenant à une classe fréquente aura une influence plus faible afin de compenser la présence élevée de ce type de données dans le minibatch. Au contraire, une donnée appartenant à une classe rare aura une erreur majorée afin de compenser la faible représentation de cette classe. Ainsi, l'erreur associée à une donnée est définie par: $$Er_i^{ponderated}=Er_i*\frac{Card(x)}{Card(x_{classe})}$$
+
+    Au lieu de modifier la méthode de calcul de l'erreur, il est possible d'influencer la valeur du pas d'apprentissage en fonction de la données d'apprentissage. Ainsi, dans le cadre d'un apprentissage par gradient stochastique, la valeur du pas sera pondérée selon la classe de la donnée traitée. Le pas serait minoré si la donnée appartient à une classe très représentée et majoré dans le cas contraire. Il est possible de généraliser cette solution pour la rendre exploitable avec un minibatch de données.\\
+
+    Cette calibration est rudimentaire et simpliste. Une approche reposant sur une régression logistique\cite{logis} permet une prédiction des poids plus approfondie.
+\end{itemize}
+
+\noindent Si vous souhaitez approfondir vos connaissances sur cette problématique, veuillez vous référer à l'article \cite{multilabellearn} qui résume les principales méthodes modernes tout en proposant un recueil bibliographique important pour la poursuite de vos recherches. De même, l'article \cite{weightedex} propose une approche de pondération des données basée sur le comportement du gradient durant l'apprentissage. Cette approche est généralisable à tout type d'architecture tout en présentant une efficacité notable. Il s'agit sans doute d'une des approches à l'état de l'art pour ce type de problème.
+
+\subsection{Calcul matriciel et neurones}
+\label{matricie_calcul_nn}
+Un réseau de neurones est une structure qui nécessite beaucoup de ressources. Optimiser le temps de calculs est une nécessité absolue. Pour cela, on exploite les capacités du calcul matriciel qui permet l'exploitation de données à grande échelle grâce à sa capacité de parallélisation\footnote{Calculs simultanés sur GPU}. Nous supposerons comme acquis les fondamentaux du calcul matriciel, notamment la multiplication.\\
+
+\noindent Nous avons vu qu'un neurone est défini par une somme de ses entrées pondérées par ses poids (additionnée par la suite avec le biais). Cet ensemble forme un \textit{logit} et ce dernier va être utilisé par la fonction d'activation du neurone pour déterminer la sortie du neurone. La problématique du calcul se situe donc majoritairement dans le calcul du \textit{logit}. Pour cela, une représentation matricielle est possible.\\
+
+\noindent Supposons un vecteur de données dans $R^{784}$. Il peut être représenté par la matrice:
+$$X=\begin{bmatrix}
+   x_{1} \\
+   x_{2} \\
+   \vdots \\
+   x_{784}
+\end{bmatrix}$$
+
+\noindent Supposons un vecteur de poids d'un neurone $W = [w_1, w_1, w_2,..., w_{784}]$. Nous souhaitons multiplier terme à terme l'entrée avec son poids associé. On observe donc que ce comportement est réalisable par une multiplication matricielle en considérant $W^T$.\footnote{On exploite la transposé de W pour avoir un vecteur colonne et non ligne afin de permettre le produit matriciel.} De plus, dans un neurone, le nombre d'entrée coïncide avec le nombre de poids. La concordance des dimensions est donc respectée. On obtient donc:
+$$W=\begin{bmatrix}
+   w_{1,1} \\
+   w_{2,1} \\
+   \vdots \\
+   w_{784,1}
+\end{bmatrix} \longrightarrow \
+W^T=\begin{bmatrix}
+   w_{1,1} & w_{1,2} & \ldots & w_{1,784}\\
+\end{bmatrix}$$
+
+\noindent Ainsi, le calcul du logit d'un neurone est égal à:
+$$logit=\begin{bmatrix}
+w_{1,1} & w_{1,2} & \ldots & w_{1,784}\\
+\end{bmatrix}*
+\begin{bmatrix}
+   x_{1} \\
+   x_{2} \\
+   \vdots \\
+   x_{784}
+\end{bmatrix}$$
+
+\noindent Nous avons vu comment représenter le fonctionnement d'un neurone mais un réseau de neurones possède (l'écrasante majorité du temps), plus d'un neurone par couche. Afin de représenter cette spécificité, l'astuce consiste à représenter l'ensemble des poids de l'ensemble des neurones de la couche à travers une même matrice. Ainsi, pour une couche de 10 neurones avec 784 entrées, nous considérerons une matrice de dimension 784 * 10, i.e, une colonne représente les poids d'un même neurones. De même, supposons un minibatch de 5 données, nous aurons donc une matrice de dimension 784*5. Soit $X$, la matrice représentant le minibatch et W, matrice de poids des différents neurones:
+
+$$X=\begin{bmatrix}
+   x_{1,1} & \cdots& x_{1,5} \\
+   x_{2,1} & \cdots& x_{2,5}\\
+   \vdots &\ddots& \vdots\\
+   x_{784,1}& \cdots& x_{784,5}
+\end{bmatrix} \ , \ W=\begin{bmatrix}
+   w_{1,1} & \cdots& w_{1,10} \\
+   w_{2,1} & \cdots &w_{2,10}\\
+   \vdots & \ddots& \vdots\\
+   w_{784,1}& \cdots &w_{784,10}
+\end{bmatrix}$$
+
+\noindent Afin de calculer les logits, nous calculons $W^TX$ soit le produit matriciel d'une matrice 10*784 et 784*5. Nous obtenons donc une matrice de sortie de dimensions 10*5. Une colonne de la matrice de sortie représente ainsi les sorties des différents neurones pour une même données et une ligne, les sorties d'un même neurone pour différentes données.\\
+
+\noindent Cette méthode est appliquée pour tout réseau et tout type de donnée en entrée. C'est pourquoi il est nécessaire de considérer exclusivement des données numériques. L'exploitation de données non numériques telles que du texte ou des variables catégorielles demandent une étape de pré-traitement pour les rendre exploitables. C'est notamment l'objectif des \textit{Words Embedding} qui propose une projection vectorielle d'un mot, transformant une donnée textuelle en une donnée vectorisée exploitable par un réseau. Dans le cas de données catégorielle, une méthode standard est le \textit{One Hot Encoding} où une variable catégorielle à n catégories est remplacée par un vecteur binaire dans $R^n$ où l'ensemble des dimensions est à 0 exceptée la dimension associée à la catégorie initiale de la donnée\footnote{Le vecteur aurait la forme $[0, 0, ... , 1, 0]$}.\\
+
+\noindent L'écriture matricielle d'un neurone est souvent exploitée dans la littérature. Ainsi, par exemple, supposons une couche de neurones activée par la fonction \textit{softmax}. Une écriture standard de ce neurone serait:
+$$Y=softmax(W^TX+b)$$
+Ou encore:
+$$Y_j = \frac{exp(W_j^TX+b_j)}{\sum_iexp(W_i^TX+b_i)}$$
+
+\noindent L'écriture mathématique a tendance à "alourdir" la lecture des papiers de recherche. Bien que les notations puissent impressionner, l'intuition et la compréhension des idées développées sont souvent accessibles à un lecteur sans formation mathématique avancée.
