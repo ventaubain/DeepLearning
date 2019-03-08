@@ -1,0 +1,54 @@
+\section{Normalisation des données}
+
+Les données utilisées par un réseau de neurones peuvent être très variées et de nature différente. Ainsi, par exemple, dans le cas d'image, les données sont très similaires: matrice Hauteur*Largeur à valeurs dans $[0,255]$ (la résolution de l'image - nombre de pixels de l'image - est supposée constante). Il est souvent préférable de standardiser ses données afin de permettre un apprentissage de qualité.\\
+
+\noindent Supposons maintenant des données numériques et financières: le bénéfice d'une entreprise et le bénéfice d'un employé lambda. Les données sont visibles sur la Figure \ref{dataset_entreprise}. Les valeurs des données de l'entreprise sont importantes (de l'ordre de grandeur $[10^5,10^{7}]$) et les données de l'employé plus faible (de l'ordre de grandeur $[10^1,10^3$]). Cette différence provoquera donc une valeur moyenne (exprimée par la moyenne d'un point de vue statistique) significativement différente entre ces deux sous-ensembles de données.\\
+
+\begin{figure}
+    \centering
+    \begin{tabular}{|c|c|c|}
+    \hline
+        Mois & Bénéfices de l'entreprise & Bénéfices d'un employé X  \\
+        \hline
+        Janvier & $2*10^7$ & $4*10^2$\\
+        Février & $8*10^7$ & $2*10^2$\\
+        Mars & $1*10^6$ & $1*10^3$\\
+        Avril & $5*10^8$ & $3*10^1$\\
+        ... & ... & ...\\
+        \hline
+    \end{tabular}
+    \caption{Exemple d'un jeu de données (toute ressemblance avec des données réelles est fortuite)}
+    \label{dataset_entreprise}
+\end{figure}
+
+\noindent De même, la variation entre les données (exprimée par la variance d'un point de vue statistique) sera d'un autre ordre de grandeur. Par exemple, entre Mars et Avril, la variation du bénéfice de l'entreprise se compte en millions alors que la variation du bénéfice d'un employé se compte en centaines.\\
+
+\noindent Revenons au contexte du réseau de neurones et supposons une problématique qui reposerait sur notre jeu de données. Nous avons vu qu'un réseau apprend en minimisant une fonction de coût et qu'un poids d'un neurone est corrigé en dépendance avec sa valeur d'entrée. Il est donc évident que des valeurs à des échelles différentes vont sur(sous)-stimuler le neurone. Ceci est très problématique car cette différence va provoquer une pondération des données d'entrées. Dans notre exemple, les données de l'entreprise seront sur-pondérées par rapport aux données de l'employé. Il est donc nécessaire de \textbf{normaliser} les données afin d'éviter ce genre de problème. Pour cela, différentes (parfois complémentaires) existent.
+
+\subsection{Centrer les données}
+Afin de limiter le problème d'échelle des données, il est possible de les \textit{centrer}. Centrer les données modifient les données afin que la moyenne de ces données soit 0. Les nouvelles données sont obtenues selon la relation suivante: $data_{i,centre}=data_{i,raw}-\mu$ où $\mu$ est la moyenne de cet ensemble de données.\\
+
+\noindent \textbf{Important}: La moyenne n'est pas réalisée sur l'ensemble du jeu de données mais sur les données associées à un même attribut. Dans notre exemple, il y aurait une moyenne pour les données de l'entreprise et une moyenne pour les données de l'employé.\\
+
+\noindent Cette modification est réalisée par la quasi-totalité des pré-traitements de données et limite grandement le risque de biais dans l'apprentissage.
+
+\subsection{Réduire les données}
+Les données d'un jeu d'apprentissage peuvent avoir une variance importante, i.e des valeurs éloignées de la moyenne associée. Les conséquences sont similaires à celles provoquées par une échelle différente de la moyenne. L'idée est donc d'utiliser une échelle commune à l'ensemble du jeu de données en imposant un écart-type de 1. Ainsi, les données seront représentées par une valeur contenue dans $[-1,1]$. Les nouvelles données sont obtenues selon la relation suivante: $data_{i,reduit}=\frac{data_{i,raw}}{\sigma}$ où $\sigma$ est l'écart-type de cet ensemble de données.\\
+
+\noindent \textbf{Important}: L'écart-type n'est pas réalisé sur l'ensemble du jeu de données mais sur les données associées à un même attribut. Dans notre exemple, il y aurait un écart-type pour les données de l'entreprise et un écart-type pour les données de l'employé.\\
+
+\noindent Dans les faits, cette modification est peu employée de manière isolée.
+
+\subsection{Centrer-Réduire les données}
+Centrer-Réduire les données revient à centrer et réduire les données, i.e réaliser les deux modifications explicitées précédemment. Ainsi, les nouvelles données sont définies telles que: $data_{i,reduit}=\frac{data_{i,raw}-\mu}{\sigma}$ avec $\mu$, la moyenne et $\sigma$, l'écart-type de ce jeu de données.\\
+
+\noindent Cette normalisation est la normalisation la plus utilisée dans le pré-traitement des données et efficace dans le traitement de la majorité des jeux de données. Elle est souvent appliquée en \textbf{traitement par défaut}. Néanmoins, bien que centrer les réduire soit très recommandé dans la majorité des cas, réduire les données dépend du cas à traiter. Par exemple, dans le cas de différents jeux d'images, l'écart-type relatif tend à être similaire entre eux. \textit{Réduire} l'image tend donc à être peu utile.\\
+
+\noindent \textbf{Important}: Il est \textbf{capital} de définir la moyenne et l'écart-type sur le jeu d'apprentissage uniquement. Par exemple, supposons deux jeux de données \textit{train} et  \textit{test}. Nous apprendrons notre modèle avec \textit{train} et nous l'évaluerons avec \textit{test}. Afin de normaliser les données, il est nécessaire de pouvoir déterminer la moyenne et l'écart-type. Pour cela, il est indispensable de ne considérer que le jeu de données d'apprentissage. Ainsi, les paramètres $\mu$ et $\sigma$ seront déterminés avec \textit{train} et, lors de l'évaluation du modèle, la normalisation utilisera les paramètres $\mu$ et $\sigma$ calculés avec \textit{train}. Une erreur classique est de déterminer ces paramètres sur l'intégralité des données (\textit{train} et \textit{test}). Ceci est une \textbf{erreur grave} qui peut grandement nuire à l'évaluation du modèle.
+
+\subsection{Analyse en Composante Principale}
+Il est possible que les données à étudier soient de très grande dimension (plusieurs milliers d'attribut\footnote{Attribut correspond à une catégorie du jeu de données, pas à une donnée brute} voir plus). Analyser des données volumineuses impose une contrainte de temps (pour l'apprentissage et la prédiction - ce qui est problématique dans le cas du temps-réel). Il est souvent préférable de diminuer le nombre de dimension des données afin de limiter ces problèmes. Pour cela, une approche simple est efficace: \textit{l'Analyse en composante principale} (ACP). \\
+
+\noindent Dans un jeu de données, chaque attribut représente une dimension. Ainsi, un jeu de données avec n attributs sera représenté par un vecteur à n dimensions. L'ACP permet de considérer les corrélations entre les attributs d'un jeu de données afin de créer de nouvelles dimensions. Une dimension crée par ACP permet donc d'expliquer l'information utile expliquée par plusieurs attributs et, de ce fait, de diminuer le nombre de dimensions\footnote{Plus les données sont corrélées, plus le nombre de dimension peut être faible sans perte d'information majeure}. Cette approche est mathématique. Nous ne détaillerons pas son fonctionnement dans cette introduction. Il faut juste noter l'importance de cette approche pour l'analyse de données très volumineuses et la capacité de projeter des données de dimension N dans une dimension M choisie par l'utilisateur (souvent 2 ou 3 pour de la visualisation à une centaine pour la conversion de données volumineuses).\\
+
+ \noindent \textbf{Important}: Cette approche est destructrice. En effet, la réduction de dimension impose une perte de données qui peut être importante ou faible selon la nature des données et l'importance de la réduction. Une analyse approfondie de l'impact de la transformation est \textbf{capitale} pour limiter la perte d'information utile. Il est \textbf{intéressant} de noter que l'ACP est utilisable pour supprimer le bruit des données. En effet, un jeu de données peut présenter des valeurs aberrantes ou douteuses qui provoqueront un bruit dans les données et nueront à l'apprentissage du modèle. Diminuer le nombre de dimension permet donc de perdre l'information la moins représentative souvent caractéristique du bruit et de ce fait, de conserver des données généralisées\footnote{Et potentiellement de meilleure qualité selon le cas}. Néanmoins, la détermination de présence de bruit ou non est souvent "tricky" et relève plus d'une sensibilité personnelle et d'un pari sur les données que d'une action mathématiquement démontrable. D'un point de vue métier, il est standard de conserver au moins 80\% de l'information utile. Au-delà, le risque de destruction est trop important et souvent néfaste.
