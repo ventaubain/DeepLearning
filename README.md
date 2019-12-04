@@ -154,7 +154,7 @@ L'avancée est estimée à environ **15%** (prévision subjective).
 
 ## Auteur
 
-* **Vincent Boyer** - *Version 1.0.0* - (vincent.boyer1@live.fr)
+* **Vincent Boyer** - *Version 1.0.0*
 
 Toute aide extérieure est la bienvenue. De même que toute remarque ou correction/amélioration à apporter !
 
