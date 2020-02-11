@@ -137,6 +137,11 @@ L'avancée est estimée à environ **15%** (prévision subjective).
 - [ ] Tutoriel applicatif
 - [ ] Relecture, correction d'erreurs
 
+### Etat actuel
+25/01/2020: Reprise de l'écriture suite à une pause:
+   * Transformer (Attention)
+   * Segmentation (Analyse d'image)
+   
 ### Suivi des mises à jour
 15/02/2019: Ajout de:
    * Veille de l'état de l'Art :ballot_box_with_check:
