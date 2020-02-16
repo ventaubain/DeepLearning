@@ -20,6 +20,7 @@ Le plan de ce cours est compose de (non exhaustif pour faciliter la lecture):
 1. Théorie de l'apprentissage
    - Type d'apprentissage
    - PAC Learning
+   - Régulation
 
 2. Fondamentaux
    - Un neurone: définition et apprentissage
@@ -141,6 +142,7 @@ L'avancée est estimée à environ **15%** (prévision subjective).
 25/01/2020: Reprise de l'écriture suite à une pause:
    * Transformer (Attention)
    * Segmentation (Analyse d'image)
+   * Transformer et NLP (Bert based)
    
 ### Suivi des mises à jour
 15/02/2019: Ajout de:
